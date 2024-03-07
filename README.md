@@ -1,6 +1,43 @@
 # dotnet
 learn .NET 
 
+* [C#](#c_sharp)
+* [EF Core](#ef_core)
+
+<a id="c_sharp"></a>
+# C#
+## Lambda operator
+In lambda expressions, the lambda operator => separates the input parameters on the left side from the lambda body on the right side.
+The following example uses the LINQ feature with method syntax to demonstrate the usage of lambda expressions:
+
+```
+string[] words = { "bot", "apple", "apricot" };
+int minimalLength = words
+  .Where(w => w.StartsWith("a"))
+  .Min(w => w.Length);
+Console.WriteLine(minimalLength);   // output: 5
+
+int[] numbers = { 4, 7, 10 };
+int product = numbers.Aggregate(1, (interim, next) => interim * next);
+Console.WriteLine(product);   // output: 280
+```
+
+Input parameters of a lambda expression are strongly typed at compile time. When the compiler can infer the types of input parameters, like in the preceding example, you may omit type declarations. If you need to specify the type of input parameters, you must do that for each parameter, as the following example shows:
+
+```
+int[] numbers = { 4, 7, 10 };
+int product = numbers.Aggregate(1, (int interim, int next) => interim * next);
+Console.WriteLine(product);   // output: 280
+```
+
+The following example shows how to define a lambda expression without input parameters:
+
+```
+Func<string> greet = () => "Hello, World!";
+Console.WriteLine(greet());
+```
+
+<a id="ef_core"></a>
 # EF Core
 Entity Framework (EF) Core is a lightweight, extensible, open source and cross-platform version of the popular Entity Framework data access technology.
 
