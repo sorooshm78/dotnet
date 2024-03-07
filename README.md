@@ -2,6 +2,7 @@
 learn .NET 
 
 * [C#](#c_sharp)
+* [ASP Core](#asp_core)
 * [EF Core](#ef_core)
 
 <a id="c_sharp"></a>
@@ -36,6 +37,79 @@ The following example shows how to define a lambda expression without input para
 Func<string> greet = () => "Hello, World!";
 Console.WriteLine(greet());
 ```
+
+<a id="asp_core"></a>
+# ASP Core
+
+## appsettings.json
+What is the ASP.NET Core AppSettings.json File?
+The appsettings.json file in an ASP.NET Core application is a JSON formatted file that stores configuration data. In this file, you can keep settings like connection strings, application settings, logging configuration, and anything else you want to change without recompiling your application. The settings in this file can be read at runtime and overridden by environment-specific files like appsettings.Development.json or appsettings.Production.json
+
+The appsettings.json file is the application configuration file used to store configuration settings such as database connection strings, any application scope global variables, etc. If you open the ASP.NET Core appsettings.json file, you see the following code created by Visual Studio by default.
+
+The appsettings.json file typically resides in the root directory of your ASP.NET Core project. You can add multiple appsettings.json files with different names, such as appsettings.development.json, appsettings.production.json, etc., to manage configuration for different environments
+
+```
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*",
+  "MyCustomKey": "MyCustomKey Value coming from appsettings.json"
+}
+```
+
+Here’s what each section typically means:
+
+* Logging: Defines the logging level for different components of the application.
+* AllowedHosts: Specifies the hosts that the application will listen to.
+* MyCustomSettings: A custom section that you define for your own application settings.
+
+To access the settings in the appsettings.json file, you can use the Configuration object in the Startup class. For example:
+```
+public Startup(IConfiguration configuration)
+{
+    Configuration = configuration;
+}
+
+public IConfiguration Configuration { get; }
+```
+You can then access the settings using the GetValue method of the Configuration object. For example:
+
+```
+string connectionString = Configuration.GetValue<string>("ConnectionStrings:DefaultConnection");
+```
+```
+public class TestModel : PageModel
+{
+    // requires using Microsoft.Extensions.Configuration;
+    private readonly IConfiguration Configuration;
+
+    public TestModel(IConfiguration configuration)
+    {
+        Configuration = configuration;
+    }
+
+    public ContentResult OnGet()
+    {
+        var myKeyValue = Configuration["MyKey"];
+        var title = Configuration["Position:Title"];
+        var name = Configuration["Position:Name"];
+        var defaultLogLevel = Configuration["Logging:LogLevel:Default"];
+
+
+        return Content($"MyKey value: {myKeyValue} \n" +
+                       $"Title: {title} \n" +
+                       $"Name: {name} \n" +
+                       $"Default Log Level: {defaultLogLevel}");
+    }
+}
+```
+
+You can also use the appsettings.json file to store different configuration values for different environments, such as development, staging, and production. To do this, you can use the appsettings.{Environment}.json naming convention, where {Environment} is the name of the environment. For example, you might have separate appsettings.Development.json, appsettings.Staging.json, and appsettings.Production.json files for different environments. The ASP.NET Core runtime will automatically use the appropriate file based on the current environment.
 
 <a id="ef_core"></a>
 # EF Core
