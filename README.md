@@ -212,6 +212,36 @@ var numQuery3 =
 
 You can also force execution by putting the foreach loop immediately after the query expression. However, by calling ToList or ToArray you also cache all the data in a single collection object.
 
+### We can use LINQ queries in two ways
+1. Query Syntax:
+The LINQ query language syntax starts with from keyword and finishes with the Select or GroupBy keyword. After from keyword, you can utilize various sorts of Standard Query operations like grouping, filtering, and so on, as indicated by your need. In LINQ, 50 unique kinds of Standard Question Administrators are accessible
+
+2. Method Syntax
+In LINQ, Method Syntax is utilized to call the expansion method for the Enumerable or Queryable static classes. It is also called Method Extension Syntax or Fluent. Notwithstanding, the compiler generally changes over the query syntax in method syntax structure at compile time. It can summon the standard Query operator like Where, Join, Max, Min, Avg, GroupBy Select, and so forth. You are permitted to call them straightforwardly without utilizing Query syntax.
+
+```
+int[] numbers = [ 5, 10, 8, 3, 6, 12 ];
+
+//Query syntax:
+IEnumerable<int> numQuery1 =
+    from num in numbers
+    where num % 2 == 0
+    orderby num
+    select num;
+
+//Method syntax:
+IEnumerable<int> numQuery2 = numbers.Where(num => num % 2 == 0).OrderBy(n => n);
+
+foreach (int i in numQuery1)
+{
+    Console.Write(i + " ");
+}
+Console.WriteLine(System.Environment.NewLine);
+foreach (int i in numQuery2)
+{
+    Console.Write(i + " ");
+}
+```
 
 
 <a id="asp_core"></a>
