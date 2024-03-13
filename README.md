@@ -75,6 +75,16 @@ Func<string, string> GetGreeting = (name) => {
 Console.WriteLine(GetGreeting("Grant"));   
 ```
 
+A statement lambda has a block of statements as its body.
+Syntax: (input-parameters) => { <sequence-of-statements> }
+Example:
+```
+Action<string> greet = name => {
+    Console.WriteLine($"Hello, {name}!");
+};
+greet("Alice"); // Output: Hello, Alice!
+```
+
 <a id="using"></a>
 ## using 
 The using statement ensures the correct use of an IDisposable instance:
