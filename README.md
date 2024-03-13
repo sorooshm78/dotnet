@@ -789,6 +789,57 @@ public class Blog
 }
 ```
 
+### Keys
+A key serves as a unique identifier for each entity instance. Most entities in EF have a single key, which maps to the concept of a primary key in relational databases (for entities without keys, see Keyless entities). Entities can have additional keys beyond the primary key (see Alternate Keys for more information).
+
+Configuring a primary key
+By convention, a property named Id or <type name>Id will be configured as the primary key of an entity.
+
+```
+internal class Car
+{
+    public string Id { get; set; }
+
+    public string Make { get; set; }
+    public string Model { get; set; }
+}
+
+internal class Truck
+{
+    public string TruckId { get; set; }
+
+    public string Make { get; set; }
+    public string Model { get; set; }
+}
+```
+
+You can configure a single property to be the primary key of an entity as follows:
+
+```
+internal class Car
+{
+    [Key]
+    public string LicensePlate { get; set; }
+
+    public string Make { get; set; }
+    public string Model { get; set; }
+}
+```
+
+You can also configure multiple properties to be the key of an entity - this is known as a composite key. Conventions will only set up a composite key in specific cases - like for an owned type collection.
+
+```
+[PrimaryKey(nameof(State), nameof(LicensePlate))]
+internal class Car
+{
+    public string State { get; set; }
+    public string LicensePlate { get; set; }
+
+    public string Make { get; set; }
+    public string Model { get; set; }
+}
+```
+
 <a id="architecture"></a>
 # Architecture
 
