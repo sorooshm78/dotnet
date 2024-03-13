@@ -335,6 +335,47 @@ obj.displayData(34);
 obj.displayData("Tim");
 ```
 
+Example:
+```
+// C# program to show multiple
+// type parameters in Generics
+using System;
+
+public class GFG {
+	
+	// Generics method
+	public void Display<TypeOfValue>(string msg, TypeOfValue value)
+	{
+		Console.WriteLine("{0}:{1}", msg, value);
+	}
+}
+
+// Driver class
+public class Example {
+	
+	// Main Method
+	public static int Main()
+	{
+		
+		// creating object of class GFG
+		GFG p = new GFG();
+		
+		// calling Generics method
+		p.Display<int>("Integer", 122);
+		p.Display<char>("Character", 'H');
+		p.Display<double>("Decimal", 255.67);
+		return 0;
+	}
+}
+```
+
+Output :
+```
+Integer:122
+Character:H
+Decimal:255.67
+```
+
 <a id="asp_core"></a>
 # ASP Core
 
