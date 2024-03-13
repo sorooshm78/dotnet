@@ -243,6 +243,97 @@ foreach (int i in numQuery2)
 }
 ```
 
+## Generic classes and methods
+C# Generics allow us to create a single class or method that can be used with different types of data. This helps us to reuse our code.
+Here, we will learn to create generics class and method in C#.
+
+### C# generics Class
+A generics class is used to create an instance of any data type. To define a generics class, we use angle brackets (<>) as,
+
+```
+class Student<T>
+{
+  // block of code 
+}
+```
+
+Here, we have created a generics class named Student. T used inside the angle bracket is called the type parameter.
+While creating an instance of the class, we specify the data type of the object which replaces the type parameter.
+
+Create an Instance of Generics Class
+Let's create two instances of the generics class.
+```
+// create an instance with data type string
+Student<string> studentName = new Student<string>();
+```
+```
+// create an instance with data type int
+Student<int> studentId = new Student<int>();
+```
+Here, we have created two instances named studentName and studentId with data types string and int, respectively.
+
+During the time of compilation, the type parameter T of the Student class is replaced by,
+
+* string - for instance studentName
+* int - for instance studentId
+
+Example: C# generics Class
+```
+using System;
+// define a generics class named Student
+public class Student<T>
+{
+    // define a variable of type T 
+    public T data;
+
+    // define a constructor of the Student class 
+    public Student(T data)
+    {
+        this.data = data;
+        Console.WriteLine("Data passed: " + this.data);
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        // create an instance with data type string 
+        Student<string> studentName = new Student<string>("Avicii");
+
+        // create an instance with data type int
+        Student<int> studentId = new Student<int>(23);
+    }
+}
+```
+
+Output
+```
+Data passed: Avicii
+Data passed: 23
+```
+
+C# generics Method
+Similar to the generics class, we can also create a method that can be used with any type of data. Such a class is known as the generics Method. For example,
+```
+public void displayData(T data) {
+    Console.WriteLine("Data Passed: " + data);
+}
+```
+Here,
+
+* displayData - name of the generics method
+* T - type parameter to specify the function can accept any type of data
+* data - function parameter
+Now we can use this function to work with any type of data. For example,
+```
+// calling function with integer data
+obj.displayData(34);
+```
+```
+// calling function with string data
+obj.displayData("Tim");
+```
 
 <a id="asp_core"></a>
 # ASP Core
