@@ -48,6 +48,33 @@ Func<string> greet = () => "Hello, World!";
 Console.WriteLine(greet());
 ```
 
+### Declaring functions
+```
+Func<int, int, int> Multiply = (x,y) => x*y;
+int result = Mutliply(3,5); // 15
+```
+
+Simple multiplication function that takes in two numbers and multiplys them to return another int.
+Func states that we're going to pass it two ints, and it's going to return an int too.
+
+It follows the following formula Func<in, out> or Func<in,in,in,out> the out is always the last specified type.
+
+For example if we wanted it to take two integers, but return as a string we'd declare like this
+
+```
+Func<int,int,string> Multiply = (x,y) => (x*y).ToString();
+```
+
+Single line declarations don't require the return keyword, it's done implicitly, however multiline functions would, for example:
+```
+Func<string, string> GetGreeting = (name) => {
+    var timeOfDay = DateTime.Now.Hour < 12 ? "Good Morning" : "Good Afternoon";
+    var message = DateTime.Now.Hour < 17 ? "Have a great evening" : "Enjoy the rest of your day";
+    return $"{timeOfDay} - {name} -- {message}";
+};
+Console.WriteLine(GetGreeting("Grant"));   
+```
+
 <a id="using"></a>
 ## using 
 The using statement ensures the correct use of an IDisposable instance:
