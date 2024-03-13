@@ -2,6 +2,7 @@
 learn .NET 
 
 * [C#](#c_sharp)
+* [Design Pattern](#design_pattern)
 * [ASP Core](#asp_core)
 * [EF Core](#ef_core)
 * [Architecture](#architecture)
@@ -374,6 +375,113 @@ Output :
 Integer:122
 Character:H
 Decimal:255.67
+```
+
+<a id="design_pattern"></a>
+# Design Pattern
+## Fluent Interface Design Pattern
+The Fluent Interface Design Pattern in C# is a way of implementing object-oriented APIs in a manner that aims to provide more readable and discoverable code. It often involves method chaining, where each method returns the same context object, invoking multiple actions or commands in a single line of code. 
+
+The core idea behind the Fluent Interface pattern is to make code more readable and to make the client code look like a domain-specific language. The Fluent Interface Design Pattern’s main objective is to apply multiple properties (or methods) to an object by connecting them with dots (.) without re-specifying the object name each time
+
+Let us understand How to Implement the Fluent Interface Design Pattern in C# with an Example. Let’s say we have the following Employee class.
+
+![linq](https://dotnettutorials.net/wp-content/uploads/2019/10/c-users-pranaya-pictures-understanding-fluent-int.png?ezimgfmt=ng:webp/ngcb8)
+
+If we want to consume the above Employee class, we generally create an instance of the Employee class and set the respective properties as shown below.
+
+![linq](https://dotnettutorials.net/wp-content/uploads/2019/10/c-users-pranaya-pictures-without-fluent-interface.png?ezimgfmt=ng:webp/ngcb8)
+
+The Fluent interfaces simplify our object consumption code by making our code more simple, readable, and discoverable. Is it not nice to set the object properties as shown below?
+
+![linq](https://dotnettutorials.net/wp-content/uploads/2019/10/c-users-pranaya-pictures-fluent-interface-design.png?ezimgfmt=ng:webp/ngcb8)
+
+Creating such interfaces is like speaking a sentence that would make the class consumption code more simple and readable. Now, the next thing is how to achieve this. To achieve this, we have something called Method Chaining in C#
+
+What is Method Chaining in C#?
+Method Chaining in C# is a common technique where each method returns an object, and all these methods can be chained together to form a single statement. To achieve this, first, we need to create a wrapper class around the Employee class, as shown below.
+
+![linq](https://dotnettutorials.net/wp-content/uploads/2019/10/c-users-pranaya-pictures-fluent-interface-design-1.png?ezimgfmt=ng:webp/ngcb8)
+
+As you can see, here we have created methods for each property. Also, notice the return of the method is set to the FluentEmployee. Now, the above fluent interface is going to be consumed by the client. So, with the above FluentEmployee class in place, the client code should look as shown below.
+
+![linq](https://dotnettutorials.net/wp-content/uploads/2019/10/c-users-pranaya-pictures-method-chaining-in-c-pn.png?ezimgfmt=ng:webp/ngcb8)
+
+Example to Implement Fluent Interface Design Pattern using C#
+Whatever we have discussed so far, let us implement the same using the Fluent Interface Design Pattern in C#. First, we need to create a class file named Employee.cs and then copy and paste the following code into it. This is a simple class having few properties. We aim to set these property values using Method Chaining
+```
+using System;
+namespace FluentInterfaceDesignPattern
+{
+    public class Employee
+    {
+        public string FullName { get; set; }
+        public DateTime DateOfBirth { get; set; }
+        public string Department { get; set; }
+        public string Address { get; set; }
+    }
+}
+```
+Creating Wrapper:
+To set the above Employee class Property Values using Method Chaining, we must create a Wrapper class around the Employee class. So, create a class file named FluentEmployee.cs and copy and paste the following code. This is going to be our Wrapper class. If you notice, here, we have created an instance of the Employee class. For each Employee class property, here we have created a corresponding method, and using those methods, we are setting the Employee object property values. Further, if you notice, the return type of each method (except ShowDetails) is FluentEmployee type, which is important. Because of this return type (which is returning the FluentEmployee instance), we can call the FluentEmployee class methods (except ShowDetails) one after another using the dot operator. The ShowDetails method is not for setting the values; it is used to display them.
+
+```
+using System;
+namespace FluentInterfaceDesignPattern
+{
+    public class FluentEmployee
+    {
+        private Employee employee = new Employee();
+        public FluentEmployee NameOfTheEmployee(string FullName)
+        {
+            employee.FullName = FullName;
+            return this;
+        }
+        public FluentEmployee Born(string DateOfBirth)
+        {
+            employee.DateOfBirth = Convert.ToDateTime(DateOfBirth);
+            return this;
+        }
+        public FluentEmployee WorkingOn(string Department)
+        {
+            employee.Department = Department;
+            return this;
+        }
+        public FluentEmployee StaysAt(string Address)
+        {
+            employee.Address = Address;
+            return this;
+        }
+        public void ShowDetails()
+        {
+            Console.WriteLine($"Name: {employee.FullName}, \nDateOfBirth: {employee.DateOfBirth}, \nDepartment: {employee.Department}, \nAddress: {employee.Address}");
+        }
+    }
+}
+```
+```
+using System;
+namespace FluentInterfaceDesignPattern
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            //Create an Instance of Wrapper class i.e. FluentEmployee
+            FluentEmployee obj = new FluentEmployee();
+
+            //Call Methods one by one using dot Operator whose Return Type is FluentEmployee
+            obj.NameOfTheEmployee("Anurag Mohanty")
+                    .Born("10/10/1992")
+                    .WorkingOn("IT")
+                    .StaysAt("Mumbai-India");
+
+            //To See the Details call the ShowDetails Method
+            obj.ShowDetails();
+            Console.Read();
+        }
+    }
+}
 ```
 
 <a id="asp_core"></a>
