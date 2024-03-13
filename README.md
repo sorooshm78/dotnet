@@ -10,6 +10,7 @@ learn .NET
     * [Fluent](#fluent)
 * [ASP Core](#asp_core)
 * [EF Core](#ef_core)
+    * [Entity Properties](#entity_properties)
 * [Architecture](#architecture)
     * [onion](#onion)
 
@@ -705,6 +706,88 @@ db.SaveChanges();
 **Projection** means choosing which columns (or expressions) the query shall return.
 
 **Selection** means which rows are to be returned.
+
+<a id="entity_properties"></a>
+## Entity Properties
+Each entity type in your model has a set of properties, which EF Core will read and write from the database. If you're using a relational database, entity properties map to table columns.
+
+### Included and excluded properties
+By convention, all public properties with a getter and a setter will be included in the model.
+Specific properties can be excluded as follows:
+
+```
+public class Blog
+{
+    public int BlogId { get; set; }
+    public string Url { get; set; }
+
+    [NotMapped]
+    public DateTime LoadedFromDatabase { get; set; }
+}
+```
+
+### Column names
+By convention, when using a relational database, entity properties are mapped to table columns having the same name as the property.
+If you prefer to configure your columns with different names, you can do so as following code snippet:
+
+```
+public class Blog
+{
+    [Column("blog_id")]
+    public int BlogId { get; set; }
+
+    public string Url { get; set; }
+}
+```
+
+### Column data types
+When using a relational database, the database provider selects a data type based on the .NET type of the property. It also takes into account other metadata, such as the configured maximum length, whether the property is part of a primary key, etc.
+
+For example, SQL Server maps DateTime properties to datetime2(7) columns, and string properties to nvarchar(max) columns (or to nvarchar(450) for properties that are used as a key).
+
+You can also configure your columns to specify an exact data type for a column. For example, the following code configures Url as a non-unicode string with maximum length of 200 and Rating as decimal with precision of 5 and scale of 2:
+
+```
+public class Blog
+{
+    public int BlogId { get; set; }
+
+    [Column(TypeName = "varchar(200)")]
+    public string Url { get; set; }
+
+    [Column(TypeName = "decimal(5, 2)")]
+    public decimal Rating { get; set; }
+}
+```
+
+### Maximum length
+Configuring a maximum length provides a hint to the database provider about the appropriate column data type to choose for a given property. Maximum length only applies to array data types, such as string and byte[].
+
+In the following example, configuring a maximum length of 500 will cause a column of type nvarchar(500) to be created on SQL Server:
+
+```
+public class Blog
+{
+    public int BlogId { get; set; }
+
+    [MaxLength(500)]
+    public string Url { get; set; }
+}
+```
+
+### Indexes
+Indexes are a common concept across many data stores. While their implementation in the data store may vary, they are used to make lookups based on a column (or set of columns) more efficient. See the indexes section in the performance documentation for more information on good index usage.
+
+You can specify an index over a column as follows:
+
+```
+[Index(nameof(Url))]
+public class Blog
+{
+    public int BlogId { get; set; }
+    public string Url { get; set; }
+}
+```
 
 <a id="architecture"></a>
 # Architecture
