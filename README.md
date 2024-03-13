@@ -2,13 +2,20 @@
 learn .NET 
 
 * [C#](#c_sharp)
+    * [lambda](#lambda)
+    * [using](#using)
+    * [LINQ](#linq)
+    * [Generic](#generic)
 * [Design Pattern](#design_pattern)
+    * [Fluent](#fluent)
 * [ASP Core](#asp_core)
 * [EF Core](#ef_core)
 * [Architecture](#architecture)
+    * [onion](#onion)
 
 <a id="c_sharp"></a>
 # C#
+<a id="lambda"></a>
 ## Lambda operator
 In lambda expressions, the lambda operator => separates the input parameters on the left side from the lambda body on the right side.
 The following example uses the LINQ feature with method syntax to demonstrate the usage of lambda expressions:
@@ -40,6 +47,7 @@ Func<string> greet = () => "Hello, World!";
 Console.WriteLine(greet());
 ```
 
+<a id="using"></a>
 ## using 
 The using statement ensures the correct use of an IDisposable instance:
 ```
@@ -101,6 +109,7 @@ using (MyClass myObject = new MyClass())
 // myObject is automatically disposed of here.
 ```
 
+<a id="linq"></a>
 ## LINQ
 LINQ in C# is used to work with data access from sources such as objects, data sets, SQL Server, and XML. LINQ stands for Language Integrated Query. LINQ is a data querying API with SQL like query syntaxes. LINQ provides functions to query cached data from all kinds of data sources. The data source could be a collection of objects, database or XML files. We can easily retrieve data from any object that implements the IEnumerable<T> interface.
 
@@ -244,6 +253,7 @@ foreach (int i in numQuery2)
 }
 ```
 
+<a id="generic"></a>
 ## Generic classes and methods
 C# Generics allow us to create a single class or method that can be used with different types of data. This helps us to reuse our code.
 Here, we will learn to create generics class and method in C#.
@@ -379,6 +389,8 @@ Decimal:255.67
 
 <a id="design_pattern"></a>
 # Design Pattern
+
+<a id="fluent"></a>
 ## Fluent Interface Design Pattern
 The Fluent Interface Design Pattern in C# is a way of implementing object-oriented APIs in a manner that aims to provide more readable and discoverable code. It often involves method chaining, where each method returns the same context object, invoking multiple actions or commands in a single line of code. 
 
@@ -689,8 +701,15 @@ db.Remove(blog);
 db.SaveChanges();
 ```
 
+## What are projection and selection?
+**Projection** means choosing which columns (or expressions) the query shall return.
+
+**Selection** means which rows are to be returned.
+
 <a id="architecture"></a>
 # Architecture
+
+<a id="onion"></a>
 ## Onion Architecture
 What is the Onion Architecture?
 The Onion architecture is a form of layered architecture and we can visualize these layers as concentric circles. Hence the name Onion architecture. The Onion architecture was first introduced by Jeffrey Palermo, to overcome the issues of the traditional N-layered architecture approach.
