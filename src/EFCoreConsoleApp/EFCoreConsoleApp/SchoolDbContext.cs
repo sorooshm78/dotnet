@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
+using Microsoft.Extensions.Configuration;
 
 namespace EFCoreConsoleApp
 {
@@ -7,9 +7,14 @@ namespace EFCoreConsoleApp
     {
         public DbSet<Student> Students { get; set; }
 
+        IConfiguration appConfig;
+        public SchoolDbContext(IConfiguration config)
+        {
+            appConfig = config;
+        }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=SchoolDb;Trusted_Connection=True;");
+            optionsBuilder.UseSqlServer(appConfig.GetConnectionString("SqlServer"));
         }
     }
 }
