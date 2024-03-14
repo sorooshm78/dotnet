@@ -1009,3 +1009,21 @@ An example of semantic versioning is 1.0.0, 2.1.2, and 3.3.4. The first number r
 Many RESTful APIs from tech giants and individuals usually comes like this:
 https://mysite.com/v1/ for version 1
 https://mysite.com/v2 for version 2
+
+### Given Pattern 
+```
+Title
+Path:
+Description:
+Http method type: GET - PUT - POST - DELETE
+Parameters:
+    Description
+	Example:
+    Place: Header - Body
+	Type: String - Integer - Guid
+	Mandatory: Yes - No
+	Validity Check: None needed
+Example:
+Validity Check: None needed
+Response: 200 Ok + value
+```
