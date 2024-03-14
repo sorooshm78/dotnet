@@ -13,6 +13,8 @@ learn .NET
     * [Entity Properties](#entity_properties)
 * [Architecture](#architecture)
     * [onion](#onion)
+* [API Guide](#api_guide)
+
 
 <a id="c_sharp"></a>
 # C#
@@ -946,3 +948,64 @@ This layer depends on domain layer.
 This implementation is based on domain and application layer.
 
 * Presentation Layer: This layer contains Webapi or UI.
+
+<a id="api_guide"></a>
+# API Guide
+
+## REST API Design Best Practices
+### Use JSON as the Format for Sending and Receiving Data
+In the past, accepting and responding to API requests were done mostly in XML and even HTML. But these days, JSON (JavaScript Object Notation) has largely become the de-facto format for sending and receiving API data
+
+To ensure the client interprets JSON data correctly, you should set the Content-Type type in the response header to application/json while making the request.
+
+### Use Nouns Instead of Verbs in Endpoints
+When you're designing a REST API, you should not use verbs in the endpoint paths. The endpoints should use nouns, signifying what each of them does.
+
+This is because HTTP methods such as GET, POST, PUT, PATCH, and DELETE are already in verb form for performing basic CRUD (Create, Read, Update, Delete) operations.
+
+GET, POST, PUT, PATCH, and DELETE are the commonest HTTP verbs. There are also others such as COPY, PURGE, LINK, UNLINK, and so on.
+
+So, for example, an endpoint should not look like this:
+
+https://mysite.com/getPosts or https://mysite.com/createPost
+
+Instead, it should be something like this: https://mysite.com/posts
+
+### Name Collections with Plural Nouns
+You can think of the data of your API as a collection of different resources from your consumers.
+
+If you have an endpoint like https://mysite.com/post/123, it might be okay for deleting a post with a DELETE request or updating a post with PUT or PATCH request, but it doesn’t tell the user that there could be some other posts in the collection. This is why your collections should use plural nouns.
+
+So, instead of https://mysite.com/post/123, it should be https://mysite.com/posts/123.\
+
+### Use Status Codes in Error Handling
+You should always use regular HTTP status codes in responses to requests made to your API. This will help your users to know what is going on – whether the request is successful, or if it fails, or something else.
+
+### Use Nesting on Endpoints to Show Relationships
+Oftentimes, different endpoints can be interlinked, so you should nest them so it's easier to understand them.
+
+For example, in the case of a multi-user blogging platform, different posts could be written by different authors, so an endpoint such as https://mysite.com/posts/author would make a valid nesting in this case.
+
+In the same vein, the posts might have their individual comments, so to retrieve the comments, an endpoint like https://mysite.com/posts/postId/comments would make sense.
+
+You should avoid nesting that is more than 3 levels deep as this can make the API less elegant and readable.
+
+### Use Filtering, Sorting, and Pagination to Retrieve the Data Requested
+Sometimes, an API's database can get incredibly large. If this happens, retrieving data from such a database could be very slow.
+
+Filtering, sorting, and pagination are all actions that can be performed on the collection of a REST API. This lets it only retrieve, sort, and arrange the necessary data into pages so the server doesn’t get too occupied with requests.
+
+An example of a filtered endpoint is the one below:
+https://mysite.com/posts?tags=javascript
+This endpoint will fetch any post that has a tag of JavaScript.
+
+### Be Clear with Versioning
+REST APIs should have different versions, so you don’t force clients (users) to migrate to new versions. This might even break the application if you're not careful.
+
+One of the commonest versioning systems in web development is semantic versioning.
+
+An example of semantic versioning is 1.0.0, 2.1.2, and 3.3.4. The first number represents the major version, the second number represents the minor version, and the third represents the patch version.
+
+Many RESTful APIs from tech giants and individuals usually comes like this:
+https://mysite.com/v1/ for version 1
+https://mysite.com/v2 for version 2
