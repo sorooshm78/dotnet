@@ -14,7 +14,7 @@ namespace EFCoreConsoleApp
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(appConfig.GetConnectionString("SqlServer"));
+            optionsBuilder.UseSqlServer(appConfig["ConnectionStrings:SqlServer"]);
         }
     }
 }
