@@ -13,10 +13,13 @@ using (var context = new SchoolDbContext(configuration))
     context.Database.EnsureCreated();
 
     //create entity objects
-    var std1 = new Student() { FirstName = "Soroush", LastName = "Mohammadi" };
+    var teacher1 = new Teacher() { FirstName = "T1", LastName = "T1" };
+    var std1 = new Student() { FirstName = "S1", LastName = "S1", PhoneNumber = "9092", Teacher = teacher1 };
+    var std2 = new Student() { FirstName = "S2", LastName = "S2", PhoneNumber = "9093", Teacher = teacher1 };
 
     //add entitiy to the context
     context.Students.Add(std1);
+    context.Students.Add(std2);
 
     //save data to the database tables
     context.SaveChanges();
