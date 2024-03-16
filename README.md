@@ -879,6 +879,85 @@ internal class Car
 }
 ```
 
+## Install Package in DotNet
+```
+dotnet add package <packageName>
+dotnet add package Microsoft.EntityFrameworkCore.SqlServer
+```
+
+Install EF Core Using .NET CLI
+To install EF Core using the .NET CLI (Command Line Interface), open your terminal or command prompt and navigate to your project directory. This should be the directory that contains your project's .csproj file.
+
+Install the EF Core package for SQL Server using the following command.
+```
+dotnet add package Microsoft.EntityFrameworkCore.SqlServer --version 7.0.11
+```
+
+## Adding Package Reference in .csproj
+You can simply add the package reference in your .csproj file. Double-click on your project name in Visual Studio to open .csproj file.
+
+Now, add an ItemGroup element after PropertyGroup. In the ItemGroup element, add a PackageReference element and specify the PackageId as "Microsoft.EntityFrameworkCore.SqlServer" and specify the Version attribute to the desired version, in this case "7.0.11", as shown below.
+
+```
+<ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.11" />
+</ItemGroup>
+```
+
+## Database Connection String in Entity Framework Core
+Here you will learn the formats of connection strings and the ways to use them in the Entity Framework Core 6/7 application.
+
+## Database Connection String Formats
+The most common format of a connection string in EF Core is:
+
+```
+Server={server_address};Database={database_name};UserId={username};Password={password};
+```
+
+Replace {server_address}, {database_name}, {username}, and {password} with your specific database credentials. For example, the following connection string is for the local database "SchoolDB":
+
+```
+"Server=(localdb)\\mssqllocaldb;Database=SchoolDb;UserId=myuserid;Passwprd=mypwd;"
+```
+
+you need to install Microsoft.Extensions.Configuration and Microsoft.Extensions.Configuration.Json NuGet package to your project.
+
+After installing the package, you need to build the configuration by adding appsettings.json file, as shown below
+
+```
+var configuration = new ConfigurationBuilder()
+    .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+    .Build();
+```
+
+You also need to add a constructor which accepts the IConfiguration object, as shown below.
+
+```
+public class SchoolContext : DbContext
+{       
+     IConfiguration appConfig;
+
+     public SchoolDbContext(IConfiguration config)
+     {
+         appConfig = config;
+     }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseSqlServer(appConfig.GetConnectionString("SchoolDBLocalConnection");
+    }
+} 
+```
+you can pass the configuration when you create an object of DbContext, as shown below:
+
+```
+using (var context = new SchoolDbContext(configuration))
+{
+
+}
+```
+
 <a id="architecture"></a>
 # Architecture
 
