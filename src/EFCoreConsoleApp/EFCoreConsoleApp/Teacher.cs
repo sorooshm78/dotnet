@@ -1,4 +1,6 @@
-﻿namespace EFCoreConsoleApp
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace EFCoreConsoleApp
 {
     public class Teacher
     {

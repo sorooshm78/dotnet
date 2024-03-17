@@ -1,4 +1,6 @@
-﻿namespace EFCoreConsoleApp
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace EFCoreConsoleApp
 {
     public class Student
     {
