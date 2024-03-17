@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace EFCoreConsoleApp
+﻿namespace EFCoreConsoleApp
 {
     public class Student
     {
@@ -15,5 +13,10 @@ namespace EFCoreConsoleApp
 
         public int TeacherId { get; set; }
         public Teacher Teacher { get; set; }
+
+        public override string ToString()
+        {
+            return $"Student : {FirstName} {LastName}";
+        }
     }
 }
