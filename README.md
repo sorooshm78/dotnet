@@ -1025,7 +1025,7 @@ A primary key is a column (or set of columns) in a table that uniquely identifie
 A primary key is basically a combination of the 'UNIQUE' and 'Not Null' constraints. Thus, it cannot be a NULL value. Another important point to be noted about primary key is that its value cannot be deleted from the parent table.
 
 ### What is a Foreign Key?
-A foreign key is a column (or set of columns) in a table that refers to the primary key in another table. It is used to establish a link between the two tables and is used to enforce referential integrity in the database. Foreign key is basically the field/column in a table that is analogous to the primary key of other table.
+A Foreign Key is a Key that refers to the Unique Key or Primary Key of another table or A foreign key is a column (or set of columns) in a table that refers to the primary key in another table. It is used to establish a link between the two tables and is used to enforce referential integrity in the database. Foreign key is basically the field/column in a table that is analogous to the primary key of other table.
 
 Unlike a primary key, a table can have more than one foreign key. Also, the foreign key can contain duplicate and null values in a relational database. The value of a foreign key can be deleted from the child table.
 Primary key (PK) - value which uniquely identifies every row in the table.
