@@ -958,6 +958,62 @@ using (var context = new SchoolDbContext(configuration))
 }
 ```
 
+
+Teacher Model
+```
+public class Teacher
+{
+    public int TeacherId { get; set; }
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
+
+    public List<Student> Students { get; set; }
+    public override string ToString()
+    {
+        return $"Teacher : {FirstName} {LastName}";
+    }
+}
+```
+
+Student Model
+```
+public class Student
+{
+    public int StudentId {get; set; }
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
+
+    public int TeacherId { get; set; }
+    public Teacher Teacher { get; set; }
+
+    public override string ToString()
+    {
+        return $"Student : {FirstName} {LastName}";
+    }
+}
+```
+
+retrieve all the Student from the database
+```
+foreach (var student in context.Students.Include(Student => Student.Teacher).ToList())
+{
+    Console.WriteLine($"{student} {student.Teacher}");
+}
+```
+
+
+retrieve all the Teacher from the database
+```
+foreach (var teacher in context.Teachers.Include(Teacher => Teacher.Students).ToList())
+{
+    var students = teacher.Students;;
+    foreach(var student in students)
+    {
+        Console.WriteLine($"{teacher} {student}");
+    }
+}
+```
+
 <a id="architecture"></a>
 # Architecture
 
