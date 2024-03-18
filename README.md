@@ -11,6 +11,8 @@ learn .NET
 * [ASP Core](#asp_core)
 * [EF Core](#ef_core)
     * [Entity Properties](#entity_properties)
+    * [Difference between Primary Key and Foreign Key](#pk_fk)
+    * [Relationships](#relationships)
 * [Architecture](#architecture)
     * [onion](#onion)
 * [API Guide](#api_guide)
@@ -1013,6 +1015,62 @@ foreach (var teacher in context.Teachers.Include(Teacher => Teacher.Students).To
     }
 }
 ```
+
+<a id="pk_fk"></a>
+## Difference between Primary Key and Foreign Key
+
+### What is a Primary Key?
+A primary key is a column (or set of columns) in a table that uniquely identifies each row in the table. It cannot contain null values and must be unique across all rows in the table. Only one primary key is allowed in a table.
+
+A primary key is basically a combination of the 'UNIQUE' and 'Not Null' constraints. Thus, it cannot be a NULL value. Another important point to be noted about primary key is that its value cannot be deleted from the parent table.
+
+### What is a Foreign Key?
+A foreign key is a column (or set of columns) in a table that refers to the primary key in another table. It is used to establish a link between the two tables and is used to enforce referential integrity in the database. Foreign key is basically the field/column in a table that is analogous to the primary key of other table.
+
+Unlike a primary key, a table can have more than one foreign key. Also, the foreign key can contain duplicate and null values in a relational database. The value of a foreign key can be deleted from the child table.
+Primary key (PK) - value which uniquely identifies every row in the table.
+Foreign keys (FK) - values match a primary or alternate key inherited from some other table
+
+Example: 
+* Primary Key : 
+    STUD_NO, as well as STUD_PHONE both, are candidate keys for relation STUDENT but STUD_NO can be chosen as the primary key (only one out of many candidate keys).
+
+* Foreign keys : 
+    STUD_NO in STUDENT_COURSE is a foreign key to STUD_NO in STUDENT relation
+
+
+<a id="relationships"></a>
+## Relationships
+
+One-to-many relationships are used when a single entity is associated with any number of other entities. For example, a Blog can have many associated Posts, but each Post is associated with only one Blog.
+
+Required one-to-many
+```
+// Principal (parent)
+public class Blog
+{
+    public int Id { get; set; }
+    public ICollection<Post> Posts { get; } = new List<Post>(); // Collection navigation containing dependents
+}
+
+// Dependent (child)
+public class Post
+{
+    public int Id { get; set; }
+    public int BlogId { get; set; } // Required foreign key property
+    public Blog Blog { get; set; } = null!; // Required reference navigation to principal
+}
+```
+
+A one-to-many relationship is made up from:
+
+* One or more primary or alternate key properties on the principal entity; that is the "one" end of the relationship. For example, Blog.Id.
+* One or more foreign key properties on the dependent entity; that is the "many" end of the relationship. For example, Post.BlogId.
+* Optionally, a collection navigation on the principal entity referencing the dependent entities. For example, Blog.Posts.
+* Optionally, a reference navigation on the dependent entity referencing the principal entity. For example, Post.Blog.
+
+
+
 
 <a id="architecture"></a>
 # Architecture
