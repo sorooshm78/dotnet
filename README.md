@@ -1069,7 +1069,83 @@ A one-to-many relationship is made up from:
 * Optionally, a collection navigation on the principal entity referencing the dependent entities. For example, Blog.Posts.
 * Optionally, a reference navigation on the dependent entity referencing the principal entity. For example, Post.Blog.
 
+### One-to-One Relationship
+A one-to-one relationship exists when a single entity is related to exactly one other entity. For instance, in our blogging application, an author might have a single bio. To define a one-to-one relationship, we can modify the Author class:
 
+```
+public class Author
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+
+    public int BioId { get; set; }
+    public Bio Bio { get; set; }
+}
+
+public class Bio
+{
+    public int Id { get; set; }
+    public string Content { get; set; }
+
+    public Author Author { get; set; }
+}
+```
+
+Here, the Author class now has a BioId property that serves as a foreign key to the Bio entity. The Bio entity, in turn, has a reference to its corresponding Author. This establishes a one-to-one relationship between authors and their bios.
+
+### One-to-Many Relationship
+A one-to-many relationship exists when a single entity is related to multiple instances of another entity. In our blogging application, an author can have multiple posts. Let’s update the classes to reflect this relationship:
+
+```
+public class Author
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+
+    public List<Post> Posts { get; set; }
+}
+
+public class Post
+{
+    public int Id { get; set; }
+    public string Title { get; set; }
+    public string Content { get; set; }
+
+    public int AuthorId { get; set; }
+    public Author Author { get; set; }
+}
+```
+
+In this case, the Author class includes a collection of Post entities, forming a one-to-many relationship between authors and their posts.
+
+### Many-to-Many Relationship
+A many-to-many relationship arises when multiple instances of one entity are associated with multiple instances of another entity. In our blogging application, authors can have many tags associated with their posts, and tags can be associated with multiple posts. To represent this relationship, we’ll introduce a Tag entity:
+
+```
+public class Author
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public List<Post> Posts { get; set; }
+}
+
+public class Post
+{
+    public int Id { get; set; }
+    public string Title { get; set; }
+    public string Content { get; set; }
+    public List<Tag> Tags { get; set; }
+}
+
+public class Tag
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public List<Post> Posts { get; set; }
+}
+```
+
+In this scenario, both the Author and Tag entities have many-to-many relationships with the Post entity through their respective collections of posts.
 
 
 <a id="architecture"></a>
