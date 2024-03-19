@@ -11,6 +11,7 @@ learn .NET
 * [ASP Core](#asp_core)
 * [EF Core](#ef_core)
     * [Entity Properties](#entity_properties)
+    * [Migration](#migration)
     * [Difference between Primary Key and Foreign Key](#pk_fk)
     * [Relationships](#relationships)
 * [Architecture](#architecture)
@@ -747,6 +748,81 @@ db.SaveChanges();
 **Projection** means choosing which columns (or expressions) the query shall return.
 
 **Selection** means which rows are to be returned.
+
+<a id="migration"></a>
+## Migration
+In the Working with DbContext chapter, we used the context.Database.EnsureCreated() method to create the database and schema for the first time. Note that it creates a database first time only. It cannot change the DB schema after that. For the devlopement projects, we must use EF Core Migrations API.
+
+To use EF Core Migrations API, we need to install the NuGet package Microsoft.EntityFrameworkCore.Tools. We use EF Core 7.0.11, so install the same version of package.
+
+EF Core provides migrations commands to create, update, or remove tables and other DB objects based on the entities and configurations. At this point, there is no SchoolDB database. So, we need to create the database from the model (entities and configurations) by adding a migration.
+
+If you use .NET Core CLI, then enter the following command.
+
+```
+dotnet ef migrations add InitialSchoolDB
+```
+
+This will create a new folder named Migrations in the project and create the ModelSnapshot files, as shown below.
+
+![ef](https://www.entityframeworktutorial.net/images/efcore/migration2.png)
+
+The Add-Migration command does not create the database. It just creates the two snapshot files in the Migrations folder.
+
+1. \<timestamp>_\<Migration Name>.cs: The main migration file which includes migration operations in the Up() and Down() methods. The Up() method includes the code for creating DB objects and the Down() method includes code for removing DB objects.
+2. \<contextclassname>ModelSnapshot.cs: A snapshot of your current model. This is used to determine what changed when creating the next migration.
+
+Use the following command in .NET Core CLI to create a database.
+
+```
+dotnet ef database update
+```
+
+The following executes the update-database command and creates the database, as shown below. The -verbose option shows the logs while creating the database. It creates a database with the name and location specified in the connection string in the UseSqlServer() method. It creates a table for each entity, Student and Grade). It also creates _EFMigrationHistory table that stores history of migrations applied overtime.
+
+### Apply Migrations for Modified Entities/Configurations
+Suppose we add some new entities or modify an existing entities or changed any configuration, then we again need to execute the **add-migration** and **update-migration** commands to apply changes to the database schema
+
+### Reverting Migration
+For some reason, if you want to revert the database to any of the previous state then you can do it by using the **update-database \<migration-name>** command.
+
+For example, we modified the Student entity and added some more properties. But now we want to revert it back to same as "InitialSchoolDB" migration. We can do it by using the following command:
+
+Package Manager Console/PowerShell
+```
+Update-database "InitialSchoolDB"
+```
+
+.NET Core CLI
+```
+dotnet ef database update "InitialSchoolDB".
+```
+
+### List All Migrations
+Use the following migration command to get the list of all migrations.
+```
+Get-Migration
+```
+
+.NET Core CLI
+```
+dotnet ef migrations list
+```
+
+### Removing a Migration
+Above, we have reverted the second migration named "ModifiedStudentEntity". We can remove the last migration if it is not applied to the database. Let's remove the Use the "ModifiedStudentEntity" file using the following remove commands.
+
+Package Manager Console/PowerShell
+```
+remove-migration
+```
+
+.NET Core CLI
+```
+dotnet ef migrations remove
+```
+
+The above commands will remove the last migration and revert the model snapshot to the previous migration, as shown below. Please note that if a migration is already applied to the database, then it will throw the exception.
 
 <a id="entity_properties"></a>
 ## Entity Properties
