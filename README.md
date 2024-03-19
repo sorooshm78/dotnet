@@ -1148,6 +1148,150 @@ public class Tag
 In this scenario, both the Author and Tag entities have many-to-many relationships with the Post entity through their respective collections of posts.
 
 
+Let us first understand what is Principal Entity and Dependent Entity from the relational database point of view.
+
+* Principal Entity: The Entity containing the Primary or Unique Key properties is called Principal Entity.
+* Dependent Entity: The Entity which contains the Foreign key properties is called Dependent Entity.
+
+let us first understand a few important terms used in database and model classes.
+
+* Primary Key: The Primary key is a column (columns in the case of composite primary key) in the database Table that Uniquely identifies each row.
+* Foreign Key: The Foreign key is a column in a table that makes a relationship with another table. The Foreign key Column should point to the Principal Entity’s Primary Key or Unique Key column.
+* Navigation Properties: In .NET, the Navigation properties define the type of relationships between the Entities. Based on the requirements, these properties are defined either in the Principal Entity or in the Dependent Entity.
+
+### One-to-Many Relationship Conventions
+Let's look at the different conventions which automatically configure a one-to-many relationship between the following Student and Grade entities.
+
+```
+public class Student
+{
+    public int StudentId { get; set; }
+    public string StudentName { get; set; }
+}
+       
+public class Grade
+{
+    public int GradeId { get; set; }
+    public string GradeName { get; set; }
+    public string Section { get; set; }
+}
+```
+
+After applying the conventions for one-to-many relationship in the entities above, the database tables for Student and Grade entities will look like below, where the Students table includes a foreign key GradeId.
+
+#### Convention 1
+We want to establish a one-to-many relationship where many students are associated with one grade. This can be achieved by including a reference navigation property in the dependent entity as shown below. (here, the Student entity is the dependent entity and the Grade entity is the principal entity).
+
+```
+public class Student
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+   
+    public Grade Grade { get; set; }
+}
+
+public class Grade
+{
+    public int GradeId { get; set; }
+    public string GradeName { get; set; }
+    public string Section { get; set; }
+}
+```
+
+In the example above, the Student entity class includes a reference navigation property of Grade type. This allows us to link the same Grade to many different Student entities, which creates a one-to-many relationship between them. This will produce a one-to-many relationship between the Students and Grades tables in the database, where Students table includes a nullable foreign key GradeId, as shown below. EF Core will create a shadow property for the foreign key named GradeId in the conceptual model, which will be mapped to the GradeId foreign key column in the Students table.
+
+![linq](https://www.entityframeworktutorial.net/images/efcore/onetomany-conventions1.png)
+
+Note: The reference property Grade is nullable, so it creates a nullable ForeignKey GradeId in the Students table. You can configure NotNull foreign keys using fluent API.
+
+#### Convention 2
+Another convention is to include a collection navigation property in the principal entity as shown below.
+```
+public class Student
+{
+    public int StudentId { get; set; }
+    public string StudentName { get; set; }
+}
+
+public class Grade
+{
+    public int GradeId { get; set; }
+    public string GradeName { get; set; }
+    public string Section { get; set; }
+
+    public ICollection<Student> Students { get; set; } 
+}
+```
+
+In the example above, the Grade entity includes a collection navigation property of type ICollection<student>. This will allow us to add multiple Student entities to a Grade entity, which results in a one-to-many relationship between Students and Grades tables in the database, same as in convention 1.
+
+#### Convention 3
+Another EF convention for the one-to-many relationship is to include navigation property at both ends, which will also result in a one-to-many relationship (convention 1 + convention 2).
+
+```
+public class Student
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    
+    public Grade Grade { get; set; }
+}
+
+public class Grade
+{
+    public int GradeID { get; set; }
+    public string GradeName { get; set; }
+    
+    public ICollection<Student> Students { get; set; }
+}
+```
+
+In the example above, the Student entity includes a reference navigation property of Grade type and the Grade entity class includes a collection navigation property ICollection<Student>, which results in a one-to-many relationship between corresponding database tables Students and Grades, same as in convention 1.
+
+#### Convention 4
+Defining the relationship fully at both ends with the foreign key property in the dependent entity creates a one-to-many relationship.
+
+```
+public class Student
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+
+    public int GradeId { get; set; }
+    public Grade Grade { get; set; }
+}
+
+public class Grade
+{
+    public int GradeId { get; set; }
+    public string GradeName { get; set; }
+
+    public ICollection<Student> Students { get; set; }
+}
+```
+
+In the above example, the Student entity includes a foreign key property GradeId of type int and its reference navigation property Grade. At the other end, the Grade entity also includes a collection navigation property ICollection<Student>. This will create a one-to-many relationship with the NotNull foreign key column in the Students table, as shown below.
+
+
+![linq](https://www.entityframeworktutorial.net/images/efcore/onetomany-conventions2.png)
+
+If you want to make the foreign key GradeId as nullable, then use nullable int data type (Nullable<int> or int?), as shown below.
+
+```
+public class Student
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+
+    public int? GradeId { get; set; } 
+    public Grade Grade { get; set; }
+}
+```
+
+Therefore, these are the conventions which automatically create a one-to-many relationship in the corresponding database tables. If entities do not follow the above conventions, then you can use Fluent API to configure the one-to-many relationship.
+
+
 <a id="architecture"></a>
 # Architecture
 
