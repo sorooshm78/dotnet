@@ -1019,6 +1019,96 @@ public class Context : DbContext
 }
 ```
 
+Another Example
+
+Student:
+```
+public class Student
+{
+    public int StudentId {get; set; }
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
+
+    public Teacher Teacher { get; set; }   
+
+    public override string ToString()
+    {
+        return $"Student : {FirstName} {LastName}";
+    }
+}
+```
+
+Teacher:
+```
+[PrimaryKey(nameof(FirstName), nameof(LastName))]
+public class Teacher
+{
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
+
+    public List<Student> Students { get; set; }
+    public override string ToString()
+    {
+        return $"Teacher : {FirstName} {LastName}";
+    }
+}
+```
+
+Main:
+```
+using (var context = new SchoolDbContext(configuration))
+{
+    //creates db if not exists 
+    context.Database.EnsureCreated();
+
+    //create entity objects
+    var tech = new Teacher() { FirstName = "Tom", LastName = "Rider" };
+    var std1 = new Student() { FirstName = "Harry", LastName = "Potter", Teacher = tech };
+    var std2 = new Student() { FirstName = "Gholi", LastName = "Gholipor", Teacher = tech };
+
+    context.Students.Add(std1); 
+    context.Students.Add(std2); 
+
+    //save data to the database tables
+    context.SaveChanges();
+
+    //retrieve all the students from the database
+    foreach (var student in context.Students.Include(s => s.Teacher).ToList())
+    {
+        Console.WriteLine($"{student.Teacher} {student} ");
+    }
+
+    //retrieve all the teachers from the database
+    foreach (var teacher in context.Teachers.Include(t => t.Students).ToList())
+    {
+        var students = teacher.Students; 
+        foreach (var student in students)
+        {
+            Console.WriteLine($"{teacher} {student}");
+        }
+    }
+}
+```
+
+OutPut:
+```
+Teacher : Tom Rider Student : Harry Potter
+Teacher : Tom Rider Student : Gholi Gholipor
+```
+
+#### Student Table
+| StudentId  | FirstName | LastName | TeacherFirstName | TeacherLastName |
+| ------------- | ------------- | ------------- | ------------- | ------------- | 
+| 1  | Harry | Potter | Tom | Rider |
+| 2  | Gholi | Gholipor | Tom | Rider |
+
+
+#### Teacher Table
+| FirstName  | LastName |
+| ------------- | ------------- |
+| Tom | Rider |
+
+
 ### Explicitly configuring value generation
 We saw above that EF Core automatically sets up value generation for primary keys - but we may want to do the same for non-key properties. You can configure any property to have its value generated for inserted entities as follows:
 
