@@ -957,6 +957,68 @@ internal class Car
 }
 ```
 
+### Composite Primary Key
+By using the .HasKey() method, a set of properties can be explicitly configured as the composite primary key of the entity.
+
+```
+using System.Data.Entity;    
+// ..
+
+public class PersonContext : DbContext
+{
+    // ..
+
+    protected override void OnModelCreating(DbModelBuilder modelBuilder)
+    {
+        // ..
+
+        modelBuilder.Entity<Person>().HasKey(p => new { p.FirstName, p.LastName });
+    }
+}
+```
+
+Another Example
+```
+public class Category
+{
+    public int CategoryId1 { get; set; }
+    public int CategoryId2 { get; set; }
+    public string Name { get; set; }
+
+    public virtual ICollection<Product> Products { get; set; }
+}
+
+public class Product
+{
+    public int ProductId { get; set; }
+    public string Name { get; set; }
+    public int CategoryId1 { get; set; }
+    public int CategoryId2 { get; set; }
+
+    public virtual Category Category { get; set; }
+}
+
+public class Context : DbContext
+{
+    public DbSet<Category> Categories { get; set; }
+    public DbSet<Product> Products { get; set; }
+
+    protected override void OnModelCreating(DbModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Category>()
+            .HasKey(c => new {c.CategoryId1, c.CategoryId2});
+
+        modelBuilder.Entity<Product>()
+            .HasRequired(p => p.Category)
+            .WithMany(c => c.Products)
+            .HasForeignKey(p => new {p.CategoryId1, p.CategoryId2});
+
+    }
+}
+```
+
 ### Explicitly configuring value generation
 We saw above that EF Core automatically sets up value generation for primary keys - but we may want to do the same for non-key properties. You can configure any property to have its value generated for inserted entities as follows:
 
