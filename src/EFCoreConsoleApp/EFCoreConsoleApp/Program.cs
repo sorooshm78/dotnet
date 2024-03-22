@@ -26,9 +26,9 @@ using (var context = new SchoolDbContext(configuration))
     context.SaveChanges();
 
     //retrieve all the students from the database
-    foreach (var s in context.Students.Include(Student => Student.Teacher).ToList())
+    foreach (var student in context.Students.Include(Student => Student.Teacher).ToList())
     {
-        Console.WriteLine($"{s} {s.Teacher.FirstName}");
+        Console.WriteLine($"{student.Teacher} {student}");
     }
 
     //retrieve all the Teacher from the database
