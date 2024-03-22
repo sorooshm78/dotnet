@@ -1516,3 +1516,65 @@ Example:
 Validity Check: None needed
 Response: 200 Ok + value
 ```
+
+### Understanding API Pagination
+API pagination refers to a technique used in API design and development to retrieve large data sets in a structured and manageable manner. When an API endpoint returns a large amount of data, pagination allows the data to be divided into smaller, more manageable chunks or pages. Each page contains a limited number of records or entries. The API consumer or client can then request subsequent pages to retrieve additional data until the entire dataset has been retrieved.
+
+Pagination typically involves the use of parameters, such as offset and limit or cursor-based tokens, to control the size and position of the data subset to be retrieved. These parameters determine the starting point and the number of records to include on each page.
+
+### Pagination
+Most endpoints that returns a list of entities will need to have some sort of pagination.
+
+Without pagination, a simple search could return millions or even billions of hits causing extraneous network traffic.
+
+Paging requires an implied ordering. By default this may be the item’s unique identifier, but can be other ordered fields such as a created date.
+
+### Common API Pagination Techniques
+There are several common API pagination techniques that developers employ to implement efficient data retrieval. Here are a few commonly used techniques:
+
+1. Offset and Limit Pagination
+This technique involves using two parameters: offset and limit. The "offset" parameter determines the starting point or position in the dataset, while the "limit" parameter specifies the maximum number of records to include on each page.
+
+For example, an API request could include parameters like "offset=0" and "limit=10" to retrieve the first 10 records.
+```
+GET /api/posts?offset=0&limit=10
+```
+
+### Offset Pagination
+This is the simplest form of paging. Limit/Offset became popular with apps using SQL databases which already have LIMIT and OFFSET as part of the SQL SELECT Syntax. Very little business logic is required to implement Limit/Offset paging.
+
+Limit/Offset Paging would look like GET /items?limit=20&offset=100. This query would return the 20 rows starting with the 100th row.
+
+2. Cursor-Based Pagination
+Instead of relying on numeric offsets, cursor-based pagination uses a unique identifier or token to mark the position in the dataset. The API consumer includes the cursor value in subsequent requests to fetch the next page of data.
+
+This approach ensures stability when new data is added or existing data is modified. The cursor can be based on various criteria, such as a timestamp, a primary key, or an encoded representation of the record.
+
+For example -
+```
+GET /api/posts?cursor=eyJpZCI6MX0
+```
+In the above API request, the cursor value eyJpZCI6MX0 represents the identifier of the last fetched record. This request retrieves the next page of posts after that specific cursor.
+
+3. Page-Based Pagination
+Page-based pagination involves using a "page" parameter to specify the desired page number. The API consumer requests a specific page of data, and the API responds with the corresponding page, typically along with metadata such as the total number of pages or total record count.
+
+This technique simplifies navigation and is often combined with other parameters like "limit" to determine the number of records per page.
+
+For example -
+```
+GET /api/posts?page=2&limit=20
+```
+In this API request, we are requesting the second page, where each page contains 20 posts.
+
+4. Time-Based Pagination
+In scenarios where data has a temporal aspect, time-based pagination can be useful. It involves using time-related parameters, such as "start_time" and "end_time," to specify a time range for retrieving data.
+
+This technique enables fetching data in chronological or reverse-chronological order, allowing for efficient retrieval of recent or historical data.
+
+For example -
+```
+GET /api/events?start_time=2023-01-01T00:00:00Z&end_time=2023-01-31T23:59:59Z
+```
+
+Here, this request fetches events that occurred between January 1, 2023, and January 31, 2023, based on their timestamp.
