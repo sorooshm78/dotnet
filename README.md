@@ -6,6 +6,7 @@ learn .NET
     * [using](#using)
     * [LINQ](#linq)
     * [Generic](#generic)
+    * [Anonymous Type](#anonymous_type)
 * [Design Pattern](#design_pattern)
     * [Fluent](#fluent)
 * [ASP Core](#asp_core)
@@ -297,6 +298,8 @@ foreach (int i in numQuery2)
     Console.Write(i + " ");
 }
 ```
+more:
+* [type relationships in linq query](https://learn.microsoft.com/en-us/dotnet/csharp/linq/get-started/type-relationships-in-linq-query-operations)
 
 <a id="generic"></a>
 ## Generic classes and methods
@@ -431,6 +434,24 @@ Integer:122
 Character:H
 Decimal:255.67
 ```
+
+<a id="anonymous_type"></a>
+# Anonymous Type
+In C#, an anonymous type is a type (class) without any name that can contain public read-only properties only. It cannot contain other members, such as fields, methods, events, etc.
+
+You create an anonymous type using the new operator with an object initializer syntax. The implicitly typed variable- var is used to hold the reference of anonymous types.
+
+The following example demonstrates creating an anonymous type variable student that contains three properties named Id, FirstName, and LastName.
+
+In C#, you are allowed to create an anonymous type object with a new keyword without its class definition and var is used to hold the reference of the anonymous types
+
+```
+var student = new { Id = 1, FirstName = "James", LastName = "Bond" };
+```
+
+**Because an anonymous type has no name, it is not possible to declare a local variable as explicitly being of an anonymous type. Rather, the local variable's type is replaced with var. However, by no means does this indicate that implicitly typed variables are untyped.**
+
+more 
 
 <a id="design_pattern"></a>
 # Design Pattern
