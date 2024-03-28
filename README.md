@@ -7,6 +7,9 @@ learn .NET
     * [LINQ](#linq)
     * [Generic](#generic)
     * [Anonymous Type](#anonymous_type)
+    * [Delegates](#delegates)
+    * [Func](#func)
+    * [Action](#action)
 * [Design Pattern](#design_pattern)
     * [Fluent](#fluent)
 * [ASP Core](#asp_core)
@@ -436,7 +439,7 @@ Decimal:255.67
 ```
 
 <a id="anonymous_type"></a>
-# Anonymous Type
+## Anonymous Type
 In C#, an anonymous type is a type (class) without any name that can contain public read-only properties only. It cannot contain other members, such as fields, methods, events, etc.
 
 You create an anonymous type using the new operator with an object initializer syntax. The implicitly typed variable- var is used to hold the reference of anonymous types.
@@ -451,7 +454,325 @@ var student = new { Id = 1, FirstName = "James", LastName = "Bond" };
 
 **Because an anonymous type has no name, it is not possible to declare a local variable as explicitly being of an anonymous type. Rather, the local variable's type is replaced with var. However, by no means does this indicate that implicitly typed variables are untyped.**
 
-more 
+
+<a id="delegates"></a>
+## Delegates
+
+What if we want to pass a function as a parameter? How does C# handles the callback functions or event handler? The answer is - delegate.
+
+The delegate is a reference type data type that defines the method signature. You can define variables of delegate, just like other data type, that can refer to any method with the same signature as the delegate.
+
+There are three steps involved while working with delegates:
+
+* Declare a delegate
+* Create an instance and reference a method
+* Invoke a delegate
+A delegate can be declared using the delegate keyword followed by a function signature, as shown below.
+
+Delegate Syntax
+```
+[access modifier] delegate [return type] [delegate name]([parameters])
+```
+The following declares a delegate named MyDelegate.
+
+Example: Declare a Delegate
+```
+public delegate void MyDelegate(string msg);
+```
+Above, we have declared a delegate MyDelegate with a void return type and a string parameter. A delegate can be declared outside of the class or inside the class. Practically, it should be declared out of the class.
+
+After declaring a delegate, we need to set the target method or a lambda expression. We can do it by creating an object of the delegate using the new keyword and passing a method whose signature matches the delegate signature.
+
+Example: Set Delegate Target
+```
+public delegate void MyDelegate(string msg); // declare a delegate
+
+// set target method
+MyDelegate del = new MyDelegate(MethodA);
+// or 
+MyDelegate del = MethodA; 
+// or set lambda expression 
+MyDelegate del = (string msg) =>  Console.WriteLine(msg);
+
+// target method
+static void MethodA(string message)
+{
+    Console.WriteLine(message);
+}
+```
+You can set the target method by assigning a method directly without creating an object of delegate e.g., MyDelegate del = MethodA.
+
+After setting a target method, a delegate can be invoked using the Invoke() method or using the () operator.
+
+Example: Invoke a Delegate
+```
+del.Invoke("Hello World!");
+// or 
+del("Hello World!");
+```
+The following is a full example of a delegate.
+
+Example: Delegate
+```
+public delegate void MyDelegate(string msg); //declaring a delegate
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        MyDelegate del = ClassA.MethodA;
+        del("Hello World");
+
+        del = ClassB.MethodB;
+        del("Hello World");
+
+        del = (string msg) => Console.WriteLine("Called lambda expression: " + msg);
+        del("Hello World");
+    }
+}
+
+class ClassA
+{
+    static void MethodA(string message)
+    {
+        Console.WriteLine("Called ClassA.MethodA() with parameter: " + message);
+    }
+}
+
+class ClassB
+{
+    static void MethodB(string message)
+    {
+        Console.WriteLine("Called ClassB.MethodB() with parameter: " + message);
+    }
+}
+```
+
+The following image illustrates the delegate.
+
+![delegates](https://www.tutorialsteacher.com/Content/images/csharp/delegate-mapping.png)
+
+### Passing Delegate as a Parameter
+A method can have a parameter of the delegate type, as shown below.
+
+Example: Delegate
+```
+public delegate void MyDelegate(string msg); //declaring a delegate
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        MyDelegate del = ClassA.MethodA;
+        InvokeDelegate(del);
+
+        del = ClassB.MethodB;
+        InvokeDelegate(del);
+
+        del = (string msg) => Console.WriteLine("Called lambda expression: " + msg);
+        InvokeDelegate(del);
+    }
+
+    static void InvokeDelegate(MyDelegate del) // MyDelegate type parameter
+    {
+        del("Hello World");
+    }
+}
+
+class ClassA
+{
+    static void MethodA(string message)
+    {
+        Console.WriteLine("Called ClassA.MethodA() with parameter: " + message);
+    }
+}
+
+class ClassB
+{
+    static void MethodB(string message)
+    {
+        Console.WriteLine("Called ClassB.MethodB() with parameter: " + message);
+    }
+}
+```
+
+<a id="func"></a>
+## Func
+C# includes built-in generic delegate types Func and Action, so that you don't need to define custom delegates manually in most cases.
+
+Func is a generic delegate included in the System namespace. It has zero or more input parameters and one out parameter. The last parameter is considered as an out parameter.
+
+The Func delegate that takes one input parameter and one out parameter is defined in the System namespace, as shown below:
+
+Signature: Func
+```
+namespace System
+{    
+    public delegate TResult Func<in T, out TResult>(T arg);
+}
+```
+The last parameter in the angle brackets <> is considered the return type, and the remaining parameters are considered input parameter types, as shown in the following figure.
+
+![](https://www.tutorialsteacher.com/Content/images/csharp/func-delegate.png)
+
+A Func delegate with two input parameters and one out parameters will be represented as shown below
+
+![](https://www.tutorialsteacher.com/Content/images/csharp/func-delegate2.png)
+
+The following Func delegate takes two input parameters of int type and returns a value of int type:
+```
+Func<int, int, int> sum;
+```
+You can assign any method to the above func delegate that takes two int parameters and returns an int value.
+
+Example: Func
+```
+class Program
+{
+    static int Sum(int x, int y)
+    {
+        return x + y;
+    }
+
+    static void Main(string[] args)
+    {
+        Func<int,int, int> add = Sum;
+
+        int result = add(10, 10);
+
+        Console.WriteLine(result); 
+    }
+}
+```
+
+Output:
+```
+20
+```
+
+A Func delegate type can include 0 to 16 input parameters of different types. However, it must include an out parameter for the result. For example, the following Func delegate doesn't have any input parameter, and it includes only an out parameter.
+
+Example: Func with Zero Input Parameter
+```
+Func<int> getRandomNumber;
+```
+
+### C# Func with an Anonymous Method
+You can assign an anonymous method to the Func delegate by using the delegate keyword.
+
+Example: Func with Anonymous Method
+```
+Func<int> getRandomNumber = delegate()
+                            {
+                                Random rnd = new Random();
+                                return rnd.Next(1, 100);
+                            };
+```
+
+### Func with Lambda Expression
+A Func delegate can also be used with a lambda expression, as shown below:
+
+Example: Func with lambda expression
+```
+Func<int> getRandomNumber = () => new Random().Next(1, 100);
+//Or 
+Func<int, int, int>  Sum  = (x, y) => x + y;
+```
+
+
+<a id="action"></a>
+## Action
+Action is a delegate type defined in the System namespace. An Action type delegate is the same as Func delegate except that the Action delegate doesn't return a value. In other words, an Action delegate can be used with a method that has a void return type.
+
+For example, the following delegate prints an int value.
+
+Example: C# Delegate
+```
+public delegate void Print(int val);
+
+static void ConsolePrint(int i)
+{
+    Console.WriteLine(i);
+}
+
+static void Main(string[] args)
+{           
+    Print prnt = ConsolePrint;
+    prnt(10);
+}
+```
+
+Output:
+```
+10
+```
+
+You can use an Action delegate instead of defining the above Print delegate, for example:
+
+Example: Action delegate
+```
+static void ConsolePrint(int i)
+{
+    Console.WriteLine(i);
+}
+
+static void Main(string[] args)
+{
+    Action<int> printActionDel = ConsolePrint;
+    printActionDel(10);
+}
+```
+
+You can initialize an Action delegate using the new keyword or by directly assigning a method:
+```
+Action<int> printActionDel = ConsolePrint;
+
+//Or
+
+Action<int> printActionDel = new Action<int>(ConsolePrint);
+```
+
+An Action delegate can take up to 16 input parameters of different types.
+
+An Anonymous method can also be assigned to an Action delegate, for example:
+
+Example: Anonymous method with Action delegate
+```
+static void Main(string[] args)
+{
+    Action<int> printActionDel = delegate(int i)
+                                {
+                                    Console.WriteLine(i);
+                                };
+
+    printActionDel(10);
+}
+```
+
+Output:
+```
+10
+```
+
+A Lambda expression also can be used with an Action delegate:
+
+Example: Lambda expression with Action delegate
+```
+static void Main(string[] args)
+{
+
+    Action<int> printActionDel = i => Console.WriteLine(i);
+       
+    printActionDel(10);
+}
+```
+Thus, you can use any method that doesn't return a value with Action delegate types.
+
+Advantages of Action and Func Delegates
+* Easy and quick to define delegates.
+* Makes code short.
+* Compatible type throughout the application.
+
 
 <a id="design_pattern"></a>
 # Design Pattern
