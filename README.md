@@ -10,6 +10,7 @@ learn .NET
     * [Delegates](#delegates)
     * [Func](#func)
     * [Action](#action)
+    * [Predicate](#predicate)
 * [Design Pattern](#design_pattern)
     * [Fluent](#fluent)
 * [ASP Core](#asp_core)
@@ -772,6 +773,62 @@ Advantages of Action and Func Delegates
 * Easy and quick to define delegates.
 * Makes code short.
 * Compatible type throughout the application.
+
+
+<a id="predicate"></a>
+## Predicate 
+Predicate is the delegate like Func and Action delegates. It represents a method containing a set of criteria and checks whether the passed parameter meets those criteria. A predicate delegate methods must take one input parameter and return a boolean - true or false.
+
+The Predicate delegate is defined in the System namespace, as shown below:
+
+```
+Predicate signature: public delegate bool Predicate<in T>(T obj);
+```
+
+Same as other delegate types, Predicate can also be used with any method, anonymous method, or lambda expression.
+
+Example: Predicate delegate
+```
+static bool IsUpperCase(string str)
+{
+    return str.Equals(str.ToUpper());
+}
+
+static void Main(string[] args)
+{
+    Predicate<string> isUpper = IsUpperCase;
+
+    bool result = isUpper("hello world!!");
+
+    Console.WriteLine(result);
+}
+```
+
+Output:
+```
+false
+```
+
+An anonymous method can also be assigned to a Predicate delegate type as shown below.
+
+Example: Predicate delegate with anonymous method
+```
+static void Main(string[] args)
+{
+    Predicate<string> isUpper = delegate(string s) { return s.Equals(s.ToUpper());};
+    bool result = isUpper("hello world!!");
+}
+```
+A lambda expression can also be assigned to a Predicate delegate type as shown below.
+
+Example: Predicate delegate with lambda expression
+```
+static void Main(string[] args)
+{
+    Predicate<string> isUpper = s => s.Equals(s.ToUpper());
+    bool result = isUpper("hello world!!");
+}
+```
 
 
 <a id="design_pattern"></a>
