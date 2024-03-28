@@ -5,7 +5,7 @@ using (var context = new SchoolContext())
     //creates db if not exists 
     context.Database.EnsureCreated();
 
- /*   //create entity objects
+    //create entity objects
     var std1 = new Student() { FirstName = "Harry", LastName = "Potter", Age = 10 };
     var std2 = new Student() { FirstName = "Harry", LastName = "Gholi", Age = 12 };
     var std3 = new Student() { FirstName = "Tom", LastName = "Ridder", Age = 25 };
@@ -18,7 +18,7 @@ using (var context = new SchoolContext())
     context.Students.Add(std4);
 
     //save data to the database tables
-    context.SaveChanges();*/
+    context.SaveChanges();
 
     // Query is compiled as IEnumerable<Student>
     // or perhaps IQueryable<Student>
@@ -32,6 +32,7 @@ using (var context = new SchoolContext())
         Console.WriteLine(item);
     }
 
+    // Because the select statement produces an anonymous type, the query variable must be implicitly typed by using var.
     var MultiQuery = from student in context.Students select new {student.FirstName, student.LastName};
     foreach (var item in MultiQuery)
     {
