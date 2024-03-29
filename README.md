@@ -2294,6 +2294,38 @@ Lastly, you need more storage. If you don't delete any data your database will b
 ### Set IsDeleted  
 Instead of physically removing a record, a soft delete marks it as deleted, usually by setting a flag like IsDeleted to true. The record remains in the database, but it's effectively hidden from regular application queries.
 
+### OnModelCreating
+This method is called when the model for a derived context has been initialized, but before the model has been locked down and used to initialize the context. The default implementation of this method does nothing, but it can be overridden in a derived class such that the model can be further configured before it is locked down.
+
+You can override the OnModelCreating method in your derived context and use the fluent API to configure your model. This is the most powerful method of configuration and allows configuration to be specified without modifying your entity classes. Fluent API configuration has the highest precedence and will override conventions and data annotations. The configuration is applied in the order the methods are called and if there are any conflicts the latest call will override previously specified configuration.
+
+```
+using Microsoft.EntityFrameworkCore;
+
+namespace EFModeling.EntityProperties.FluentAPI.Required;
+
+internal class MyContext : DbContext
+{
+    public DbSet<Blog> Blogs { get; set; }
+
+    #region Required
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Blog>()
+            .Property(b => b.Url)
+            .IsRequired();
+    }
+    #endregion
+}
+
+public class Blog
+{
+    public int BlogId { get; set; }
+    public string Url { get; set; }
+}
+```
+
+
 ### Implement
 implement **soft delete** for a `Student` model using **Entity Framework Core (EF Core)`:
 
