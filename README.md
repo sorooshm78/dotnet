@@ -21,6 +21,7 @@ learn .NET
     * [Query](#query)
     * [Difference between Primary Key and Foreign Key](#pk_fk)
     * [Relationships](#relationships)
+    * [Soft Delete](#soft_delete)
 * [Architecture](#architecture)
     * [onion](#onion)
 * [API Guide](#api_guide)
@@ -2270,6 +2271,120 @@ public class Student
 ```
 
 Therefore, these are the conventions which automatically create a one-to-many relationship in the corresponding database tables. If entities do not follow the above conventions, then you can use Fluent API to configure the one-to-many relationship.
+
+<a id="soft_delete"></a>
+## Soft Delete
+
+### What is a soft delete?
+A soft delete marks a record as no longer active or valid without actually deleting it from the database. Soft deletes can improve performance, and can allow “deleted” data to be recovered.
+
+Soft delete is a technique used in databases to mark records as deleted without physically removing them from the database. Instead of permanently deleting data, a flag or a separate column is used to indicate that a record is "deleted" or no longer active. This approach allows for the possibility of later recovering or restoring the deleted data if need
+
+### Why Soft Deletes?
+#### Pros
+The main reason to implement soft deletes is to prevent data loss. Your application isn't physically deleting data, just marking it deleted. Thus, with some work you can recover any soft delete.
+
+#### Cons
+The main downside of soft deletes is complexity. Your database is now more error prone. For instance, wherever you are querying the data you now must remember to filter the data by something like where is_deleted=1. This may be fine in the application context but it's often overlooked by data analysts working in the analytical context.
+
+Soft deletes also cause issues with foreign keys. If you rely on foreign keys to ensure referential integrity in your database, some rules are invalid with soft deletes.
+
+Lastly, you need more storage. If you don't delete any data your database will be bigger.
+
+### Set IsDeleted  
+Instead of physically removing a record, a soft delete marks it as deleted, usually by setting a flag like IsDeleted to true. The record remains in the database, but it's effectively hidden from regular application queries.
+
+### Implement
+implement **soft delete** for a `Student` model using **Entity Framework Core (EF Core)`:
+
+1. **Create the `Student` Model**:
+   - Assuming you have a `Student` class with properties like `Id`, `Name`, and `IsDeleted` (a boolean flag indicating whether the student is deleted or not):
+     ```csharp
+     public class Student
+     {
+         public int Id { get; set; }
+         public string Name { get; set; }
+         public bool IsDeleted { get; set; } // Soft delete flag
+         // Other properties...
+     }
+     ```
+
+2. **Add the `ISoftDeletable` Interface**:
+   - Create an interface called `ISoftDeletable` with properties for soft deletion:
+     ```csharp
+     public interface ISoftDeletable
+     {
+         bool IsDeleted { get; set; }
+         DateTime? DeletedAt { get; set; }
+     }
+     ```
+
+3. **Configure the `DbContext`**:
+   - In your `DbContext`, configure the soft delete filter for the `Student` entity:
+     ```csharp
+     public class SchoolDbContext : DbContext
+     {
+         // DbSet for Student
+         public DbSet<Student> Students { get; set; }
+
+         protected override void OnModelCreating(ModelBuilder modelBuilder)
+         {
+             base.OnModelCreating(modelBuilder);
+
+             // Configure soft delete filter for Student
+             modelBuilder.Entity<Student>().HasQueryFilter(s => !s.IsDeleted);
+         }
+
+         // Other configurations...
+     }
+     ```
+
+4. **Override `SaveChanges`**:
+   - Override the `SaveChanges` method to handle soft deletion:
+     ```csharp
+     public class SchoolDbContext : DbContext
+     {
+         // ...
+
+         public override int SaveChanges()
+         {
+             foreach (var entry in ChangeTracker.Entries<ISoftDeletable>())
+             {
+                 if (entry.State == EntityState.Deleted)
+                 {
+                     // Override removal to set soft delete properties
+                     entry.State = EntityState.Modified;
+                     entry.Property(nameof(ISoftDeletable.IsDeleted)).CurrentValue = true;
+                     entry.Property(nameof(ISoftDeletable.DeletedAt)).CurrentValue = DateTime.UtcNow;
+                 }
+             }
+             return base.SaveChanges();
+         }
+     }
+     ```
+
+5. **Usage**:
+   - When deleting a student, set the `IsDeleted` flag to true:
+     ```csharp
+     var studentToDelete = dbContext.Students.Find(studentId);
+     if (studentToDelete != null)
+     {
+         studentToDelete.IsDeleted = true;
+         dbContext.SaveChanges();
+     }
+     ```
+
+6. **Querying**:
+   - When querying students, the soft-deleted ones won't be included by default.
+   - To include soft-deleted students, use `.IgnoreQueryFilters()`:
+     ```csharp
+     var activeStudents = dbContext.Students.ToList(); // Excludes soft-deleted students
+     var allStudents = dbContext.Students.IgnoreQueryFilters().ToList(); // Includes soft-deleted students
+     ```
+
+That's it! You've implemented soft delete for the `Student` model. Adjust the code according to your actual implementation and business logic. 🌟
+
+For more details, you can refer to the [official documentation](https://blog.jetbrains.com/dotnet/2023/06/14/how-to-implement-a-soft-delete-strategy-with-entity-framework-core/) and explore other community resources as well .
 
 
 <a id="architecture"></a>
