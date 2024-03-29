@@ -25,9 +25,8 @@ using (var context = new SchoolContext())
     var Query = from student in context.Students select student.LastName;
     Console.WriteLine(Query.GetType().Name); //EntityQueryable
 
-    IEnumerable<String> QueryIEnum = from student in context.Students select student.LastName;
     IQueryable<String> QueryIQuery = from student in context.Students select student.LastName;
-    foreach (String item in QueryIEnum)
+    foreach (String item in QueryIQuery)
     {
         Console.WriteLine(item);
     }
