@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinqExample", "LinqExample\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KeyExample", "KeyExample\KeyExample.csproj", "{78687BF8-3878-497D-A7D6-7FB0F394EA6B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftDelete", "SoftDelete\SoftDelete.csproj", "{1B67E8B6-4622-43B8-B493-7E1A645C6C33}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoftDelete", "SoftDelete\SoftDelete.csproj", "{1B67E8B6-4622-43B8-B493-7E1A645C6C33}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,4 +1,5 @@
-﻿using SoftDelete;
+﻿using Microsoft.EntityFrameworkCore;
+using SoftDelete;
 
 using (var context = new PersonContext())
 {
@@ -19,7 +20,8 @@ using (var context = new PersonContext())
     //save data to the database tables
     context.SaveChanges();
 
-
-    var p = context.Persons.Where(p => p.Name == "p1");
-    
+    //soft delete
+    var p = context.Persons.Where(p => p.Name == "p1").First();
+    context.Persons.Remove(p);
+    context.SaveChanges();  
 }
