@@ -3,12 +3,12 @@ using Microsoft.Extensions.Configuration;
 using SimpleApi.Data;
 
 var builder = WebApplication.CreateBuilder(args);
-IConfiguration configuration = builder.Configuration;
+// IConfiguration Configuration = builder.Configuration;
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
