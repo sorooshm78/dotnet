@@ -11,6 +11,7 @@ learn .NET
     * [Func](#func)
     * [Action](#action)
     * [Predicate](#predicate)
+    * [DTO](#dto)
     * [AutoMapper](#auto_mapper)
 * [Design Pattern](#design_pattern)
     * [Fluent](#fluent)
@@ -831,6 +832,107 @@ static void Main(string[] args)
     bool result = isUpper("hello world!!");
 }
 ```
+
+<a id="dto"></a>
+## DTO
+
+Imagine that you want to write a letter. What information would you include in it? You carefully share the necessary information with the recipient, not all the information you have.
+The same applies when sharing data from your database with clients from other layers. You don’t want to share everything. Just like a letter, you only pack the necessary information into a plain object (collection of fields) called a Data Transfer Object (DTO).
+
+Only sending the necessary data helps to improve performance and reduce the risk of data corruption. Your DTO acts as a little package that carries the information from one layer to another, allowing the data to be transferred in a serializable format and passed along a communication channel, such as over a network connection. So, think about what data is important for the recipient and include only that in your DTO, just like you would in a letter.
+
+### Data Transfer Objects in Web
+DTOs can be used to transfer data between the client and the server. You can use DTOs to transmit only representations of entity data that are required for performing specific operations between client and server.
+
+In web applications, DTOs help to isolate the client-side code from the underlying data structures on the server side. In this article, we will examine the use of DTOs in C# web APIs, with practical examples to illustrate the benefits and usage of DTOs in API development.
+In C# web APIs, DTOs can serve as an intermediary between the client and the server and provide an abstraction level that helps isolate the underlying data structure from the client-side code.
+
+### Data Transfer Objects (DTOs) in C# Example
+Here is an example of how DTOs. Suppose you have a web API that shares user information with clients. Users’ information is stored in a database and is represented by the following class:
+
+```
+public class UserEntity
+{
+    public int Id { get; set; }
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public DateTime BirthDate { get; set; }
+    public string Email { get; set; }
+    public string PhoneNumber { get; set; }
+    // And more.
+}
+```
+
+However, you don’t want to return all this information to the client. The server wants to return the user’s first name, last name, and email address. To accomplish this, you can create a DTO class that contains only the necessary information:
+
+```
+public class UserDto
+{
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public string Email { get; set; }
+}
+```
+
+Since the UserDto class is a DTO; it doesn’t have any methods or behavior, as you see.
+The DTO class can then be used in your API controller to return the necessary information:
+
+```
+    [HttpGet("api/users/{id}")]
+    public IActionResult GetUser(int id)
+    {
+        var user = database.Users.SingleOrDefault(user => user.Id == id);
+        if (user == null)
+        {
+            return NotFound();
+        }
+ 
+        var userDto = new UserDto
+        {
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            Email = user.Email
+        };
+ 
+        return Ok(userDto);
+    }
+```
+ 
+In this example, the DTO class provides a simplified representation of the user’s information. The API doesn’t share the user’s birth date and phone number in this example. You can ensure that the client only receives the necessary information, which can improve your API’s performance.
+
+The server transferred an UserDto object back to the client over the network. The DTO is formatted as JSON. Your Web API can serialize the DTO as any other format like XML instead.
+
+Serialization is the process of converting an object or data structure into a format (such as binary, XML, JSON) that can be stored, transmitted, or reconstructed later.
+
+The serializability nature of DTOs enables them to be converted into a series of bytes transmitted over the network and reconstructed on the other end. DTOs can be passed between systems, processes, or like our example, between the layers of an application in a format that both the sender and the recipient can understand.
+
+UserDto is only a subset of UserEntity fields reducing the amount of data transmitted over a network, thus conserving network bandwidth and enhancing network performance. DTOs can also make transmitting data over the network easier, even if it needs to traverse multiple systems or networks.
+
+They also help to separate the data from the system’s behavior. As like everything else that’s constantly changing in this world, the UserEntity class might require to be changed later on. But you don’t want that change to leak into the client side.
+
+In other words, you don’t want to update all clients (like the website, the mobile app, and other services) by each update to UserEntity, do you? UserDto helps you to isolate the changes to one server system from changes to its clients.
+
+By the way, did you know that we offer a unique online course that boosts your C# career? Check it out here!
+
+### Reasons to Use DTOs
+DTOs help you with the following:
+* **Data Abstraction:** DTOs provide a level of abstraction between the client-side code and the underlying data structure, which makes it easier to modify the data structure without affecting the client-side code.
+* **Improved Performance:** By only transferring the necessary information, DTOs can significantly improve the performance of web APIs. This is because they reduce the amount of data that needs to be transferred, which can reduce network traffic and improve the overall response time of the API.
+* **Increased Security:** By only returning the necessary information, DTOs can help to reduce the risk of exposing sensitive information to the client.
+* **Interoperability:** DTOs make sharing data between different processes, threads, services, apps, and application layers easier.
+* **Better maintainability:** DTOs make it easier to maintain the code because they provide a clear separation of concerns between the client and the server.
+
+### Reasons to Not Use DTOs
+There are a few cases where using DTOs may not be necessary:
+* **Simple APIs:** If your API is very simple and only requires returning a small amount of data, using DTOs may add unnecessary complexity to the code.
+* **Performance Concerns:** If the data transfer is slow due to the size of the data being transferred, using DTOs may not improve the performance of the API, as the DTOs themselves add some overhead.
+* **Development Time:** Implementing DTOs can take more time during the development process and may not be necessary if the data structure is not likely to change in the future.
+It’s important to note that these are just general guidelines, and the decision to use DTOs will depend on your API’s specific requirements. When in doubt, it’s a good idea to use DTOs.
+
+### Data Transfer Objects in C# Summary
+A Data Transfer Object (DTO) is a design pattern in computer software architecture used to transfer data between systems or between the layers of a software application. It is an object that carries data between processes in a serializable format, allowing the data to be passed along a communication channel, such as over a network connection. A DTO typically contains data members and transfers the data between a software application’s presentation layer and the business layer. The goal is to keep the data separate from the system’s behavior and reduce the amount of data that needs to be transferred, which can improve performance and reduce the risk of data corruption.
+DTOs provide a layer of abstraction that helps to isolate the client-side code from the underlying data structure, enabling you to easily change the data structure without affecting the client-side code.
+
 
 <a id="auto_mapper"></a>
 ## Auto Mapper
