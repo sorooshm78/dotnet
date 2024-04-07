@@ -11,6 +11,7 @@ learn .NET
     * [Func](#func)
     * [Action](#action)
     * [Predicate](#predicate)
+    * [Records](#records)
     * [DTO](#dto)
     * [AutoMapper](#auto_mapper)
 * [Design Pattern](#design_pattern)
