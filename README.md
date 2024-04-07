@@ -11,6 +11,7 @@ learn .NET
     * [Func](#func)
     * [Action](#action)
     * [Predicate](#predicate)
+    * [AutoMapper](#auto_mapper)
 * [Design Pattern](#design_pattern)
     * [Fluent](#fluent)
 * [ASP Core](#asp_core)
@@ -830,6 +831,134 @@ static void Main(string[] args)
     bool result = isUpper("hello world!!");
 }
 ```
+
+<a id="auto_mapper"></a>
+## Auto Mapper
+
+**AutoMapper** is a powerful library in C# that simplifies the process of mapping data between objects. It's particularly useful when you need to transfer data from one object (source) to another (destination) with similar properties. Let's dive into it with examples.
+
+### Why Do We Need AutoMapper in C#?
+Consider two classes: `Employee` and `EmployeeDTO`. Both have identical properties: `Name`, `Salary`, `Address`, and `Department`. Our goal is to copy data from an `Employee` object to an `EmployeeDTO` object.
+
+#### Traditional Approach (Without AutoMapper):
+In the traditional approach, we manually create and populate the `Employee` object and then copy the data to the `EmployeeDTO` object. Here's how it looks:
+
+```csharp
+using System;
+
+namespace AutoMapperDemo
+{
+    public class Employee
+    {
+        public string Name { get; set; }
+        public int Salary { get; set; }
+        public string Address { get; set; }
+        public string Department { get; set; }
+    }
+
+    public class EmployeeDTO
+    {
+        public string Name { get; set; }
+        public int Salary { get; set; }
+        public string Address { get; set; }
+        public string Department { get; set; }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Employee emp = new Employee
+            {
+                Name = "James",
+                Salary = 20000,
+                Address = "London",
+                Department = "IT"
+            };
+
+            EmployeeDTO empDTO = new EmployeeDTO
+            {
+                Name = emp.Name,
+                Salary = emp.Salary,
+                Address = emp.Address,
+                Department = emp.Department
+            };
+
+            Console.WriteLine($"Name: {empDTO.Name}, Salary: {empDTO.Salary}, Address: {empDTO.Address}, Department: {empDTO.Department}");
+            Console.ReadLine();
+        }
+    }
+}
+```
+
+#### Using AutoMapper:
+Now, let's see how AutoMapper simplifies this process. First, install the AutoMapper NuGet package. Then, initialize AutoMapper and create a mapping configuration:
+
+```csharp
+using AutoMapper;
+
+namespace AutoMapperDemo
+{
+    public class Employee
+    {
+        public string Name { get; set; }
+        public int Salary { get; set; }
+        public string Address { get; set; }
+        public string Department { get; set; }
+    }
+
+    public class EmployeeDTO
+    {
+        public string Name { get; set; }
+        public int Salary { get; set; }
+        public string Address { get; set; }
+        public string Department { get; set; }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // Initialize AutoMapper
+            Mapper.Initialize(cfg => cfg.CreateMap<Employee, EmployeeDTO>());
+
+            Employee emp = new Employee
+            {
+                Name = "James",
+                Salary = 20000,
+                Address = "London",
+                Department = "IT"
+            };
+
+            EmployeeDTO empDTO = Mapper.Map<EmployeeDTO>(emp);
+
+            Console.WriteLine($"Name: {empDTO.Name}, Salary: {empDTO.Salary}, Address: {empDTO.Address}, Department: {empDTO.Department}");
+            Console.ReadLine();
+        }
+    }
+}
+```
+
+In this example, AutoMapper automatically maps properties from the `Employee` object to the `EmployeeDTO` object, saving us manual coding effort.
+
+### Advantages of AutoMapper:
+- Reduces boilerplate code.
+- Simplifies object-to-object mapping.
+- Improves maintainability and readability.
+
+Remember, AutoMapper is a powerful tool for handling object mapping in C#. 🚀
+
+Source: Conversation with Bing, 4/7/2024
+(1) AutoMapper in C# with Examples - Dot Net Tutorials. https://dotnettutorials.net/lesson/automapper-in-c-sharp/.
+(2) What is Automapper in C# and How to Use It | Simplilearn. https://www.simplilearn.com/tutorials/asp-dot-net-tutorial/automapper-in-c-sharp.
+(3) c# - Simple Automapper Example - Stack Overflow. https://stackoverflow.com/questions/20635534/simple-automapper-example.
+(4) Getting Started Guide — AutoMapper documentation. https://docs.automapper.org/en/stable/Getting-started.html.
+(5) github.com. https://github.com/Nohovich/.NET/tree/4e7b6115d25b3232f90103c8115f050382956e3a/Framework-AutoMapperExample-master%2FAutoMapperExample%2FEmployee.cs.
+(6) github.com. https://github.com/manojsdeveloper/my-dev.to/tree/ced23fb0d54d12dc81bc68fe5d6032770f97759f/blog-posts%2Fc%23%2Fautomapper.md.
+(7) github.com. https://github.com/HongLienLe/AutoMapperDemo/tree/ca8b0da2f26c48389683cd4d2d7cbddb28d571c8/AutoMapperDemo%2FModel%2FEmployee.cs.
+
+
+
 
 
 <a id="design_pattern"></a>
