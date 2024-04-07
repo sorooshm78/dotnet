@@ -833,6 +833,125 @@ static void Main(string[] args)
 }
 ```
 
+Let's explore **records** in C# and understand how they simplify working with data models. Records provide special syntax and behavior for creating objects that store data. Here are the key points about records:
+
+
+<a id="records"></a>
+## Records
+
+1. **What Are Records?**
+   - A **record** in C# is either a **class** or a **struct** that focuses on efficiently storing data.
+   - It provides built-in functionality for common scenarios related to data storage.
+
+2. **Syntax and Behavior:**
+   - The `record` modifier instructs the compiler to synthesize useful members for data-centric types.
+   - These synthesized members include:
+     - An overload of `ToString()` for better string representation.
+     - Members that support **value equality** (comparing instances based on content).
+
+3. **Records vs. Classes and Structs:**
+   - Records are **immutable** by default, making them thread-safe.
+   - They behave like values but are actually **reference types**.
+   - Records are primarily intended for **immutable data models**.
+
+4. **Positional Parameters:**
+   - When you declare a primary constructor on a record, the compiler generates public properties for the primary constructor parameters.
+   - These parameters are referred to as **positional parameters**.
+   - The compiler creates positional properties that mirror the primary constructor.
+
+5. **Examples:**
+
+   - **Record Class (Reference Type):**
+     ```csharp
+     public record Person(string FirstName, string LastName);
+     ```
+
+     Or with explicit property definitions:
+     ```csharp
+     public record Person
+     {
+         public string FirstName { get; init; }
+         public string LastName { get; init; }
+     }
+     ```
+
+   - **Record Struct (Value Type):**
+     ```csharp
+     public readonly record struct Point(double X, double Y, double Z);
+     ```
+
+     Or with explicit property definitions:
+     ```csharp
+     public record struct Point
+     {
+         public double X { get; init; }
+         public double Y { get; init; }
+         public double Z { get; init; }
+     }
+     ```
+
+6. **Mutability:**
+   - While records can be mutable, they are primarily designed for immutability.
+   - Records with mutable properties and fields are possible but less common.
+
+Remember, records offer concise syntax, immutability, and value equality, making them a powerful tool for managing data in your C# applications! 🚀📊
+
+For more details, you can explore the [official Microsoft Learn documentation](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/record) and other resources ¹²³.
+
+Source: Conversation with Bing, 4/7/2024
+(1) Records - C# reference - C# | Microsoft Learn. https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/record.
+(2) Working with Record Types in C# | CodeGuru.com. https://www.codeguru.com/csharp/record-types-c-sharp/.
+(3) Records in C# - C# | Microsoft Learn. https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/types/records.
+(4) Creating and Working with Records in C#: Tutorial (2024). https://www.bytehide.com/blog/records-csharp.
+(5) Use record types - C# tutorial - C# | Microsoft Learn. https://learn.microsoft.com/en-us/dotnet/csharp/tutorials/records.
+
+
+### Differences between records and record structs
+Certainly! Let's delve into the differences between **records** and **record structs** in C#.
+
+1. **Records**:
+   - A **record** is a type that provides special syntax and behavior for working with data models.
+   - It is primarily used for representing data with minimal boilerplate code.
+   - Records are reference types (similar to classes).
+   - They are designed for **immutability** and are ideal for scenarios where you want to create objects with read-only properties.
+   - Records automatically generate useful methods such as equality comparison, hash code calculation, and string representation.
+   - Example of a record:
+
+     ```csharp
+     public record Person(string FirstName, string LastName);
+     var person = new Person("John", "Doe");
+     ```
+
+   - In the above example, `Person` is a record with two positional parameters (`FirstName` and `LastName`). These parameters are automatically treated as read-only properties.
+
+2. **Record Structs**:
+   - A **record struct** is a value type (similar to structs).
+   - Unlike records, record structs are mutable by default.
+   - When using positional parameters in a record struct, those parameters are entirely mutable.
+   - Example of a record struct:
+
+     ```csharp
+     public record struct Point(int X, int Y);
+     var point = new Point(10, 20);
+     point.X = 15; // Valid, even though it's a record struct
+     ```
+
+   - In the above example, `Point` is a record struct with two positional parameters (`X` and `Y`). You can modify their values directly.
+
+3. **When to Use Each**:
+   - **Records**: Use records when you need a simple data structure with immutability and automatic generation of useful methods (e.g., equality checks).
+   - **Record Structs**: Use record structs when you want a lightweight value type that encapsulates related variables but allows mutation.
+
+Remember that both records and record structs provide concise syntax for defining types, but their behavior and use cases differ. Choose the one that best fits your specific requirements! 🚀
+
+Source: Conversation with Bing, 4/7/2024
+(1) Classes, structs, and records in C# - C# | Microsoft Learn. https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/object-oriented/.
+(2) What's the Difference Anyway?! Class, Struct, Record, oh my!. https://www.codingwithcalvin.net/whats-the-difference-anyway-class-struct-record-oh-my/.
+(3) Class, Struct, Record, Record Struct | by GM Fuster - Medium. https://medium.com/nerd-for-tech/c-class-struct-record-record-struct-d3b21c57d9bb.
+(4) When to use record vs class vs struct in C#? - C# Corner. https://www.c-sharpcorner.com/article/when-to-use-record-vs-class-vs-struct-in-c-sharp/.
+(5) c# - When to use record vs class vs struct - Stack Overflow. https://stackoverflow.com/questions/64816714/when-to-use-record-vs-class-vs-struct.
+
+
 <a id="dto"></a>
 ## DTO
 
