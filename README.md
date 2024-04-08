@@ -1180,7 +1180,64 @@ Source: Conversation with Bing, 4/7/2024
 (7) github.com. https://github.com/HongLienLe/AutoMapperDemo/tree/ca8b0da2f26c48389683cd4d2d7cbddb28d571c8/AutoMapperDemo%2FModel%2FEmployee.cs.
 
 
+### How do Map Properties when the Property Names are Different using AutoMapper?
+If the Property names differ in Source and Destination types, then you can map such properties in AutoMapper using the ForMember option. So, to Map the Name property of the Source Object with the FullName property of the Destination Object and the Department property of the Source Object with the Dept property of the Destination Object, we need to provide mapping configuration for these two properties in the mapping configuration. So, modify the MapperConfig class file to provide such property mapping configurations. In our upcoming articles, we will discuss the ForMember and MapForm options in detail.
 
+```
+namespace AutoMapperDemo
+{
+    public class Employee
+    {
+        public string Name { get; set; }
+        public int Salary { get; set; }
+        public string Address { get; set; }
+        public string Department { get; set; }
+    }
+}
+```
+
+```
+namespace AutoMapperDemo
+{
+    public class EmployeeDTO
+    {
+        public string FullName { get; set; }
+        public int Salary { get; set; }
+        public string Address { get; set; }
+        public string Dept { get; set; }
+    }
+}
+```
+
+```
+using AutoMapper;
+namespace AutoMapperDemo
+{
+    public class MapperConfig
+    {
+        public static Mapper InitializeAutomapper()
+        {
+            //Provide all the Mapping Configuration
+            var config = new MapperConfiguration(cfg =>
+            {
+                //Configuring Employee and EmployeeDTO
+                cfg.CreateMap<Employee, EmployeeDTO>()
+                //Provide Mapping Configuration of FullName and Name Property
+                .ForMember(dest => dest.FullName, act => act.MapFrom(src => src.Name))
+                
+                //Provide Mapping Dept of FullName and Department Property
+                .ForMember(dest => dest.Dept, act => act.MapFrom(src => src.Department));
+                //Any Other Mapping Configuration ....
+            });
+            //Create an Instance of Mapper and return that Instance
+            var mapper = new Mapper(config);
+            return mapper;
+        }
+    }
+}
+```
+
+With the above changes in place, now run the application, and you should see the output as expected.
 
 
 <a id="design_pattern"></a>
