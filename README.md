@@ -1739,6 +1739,33 @@ In the above example, the CustomerBusinessLogic class implements the IDataAccess
 <a id="asp_core"></a>
 # ASP Core
 
+Show list of template
+```
+dotnet new list
+```
+
+For Create Solution File
+```
+dotnet new sln
+```
+
+For Create Webapi
+```
+dotnet new webapi -n NameOfProject
+```
+
+dotnet sln -h:
+
+Commands:
+* add <PROJECT_PATH>     Add one or more projects to a solution file.
+* list                   List all projects in a solution file.
+* remove <PROJECT_PATH>  Remove one or more projects from a solution file.
+
+dotnet add project to solution
+```
+dotnet sln add <PROJECT_PATH>     // Add one or more projects to a solution file.
+```
+
 ## appsettings.json
 What is the ASP.NET Core AppSettings.json File?
 The appsettings.json file in an ASP.NET Core application is a JSON formatted file that stores configuration data. In this file, you can keep settings like connection strings, application settings, logging configuration, and anything else you want to change without recompiling your application. The settings in this file can be read at runtime and overridden by environment-specific files like appsettings.Development.json or appsettings.Production.json
