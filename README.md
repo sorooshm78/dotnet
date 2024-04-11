@@ -14,6 +14,7 @@ learn .NET
     * [Records](#records)
     * [DTO](#dto)
     * [AutoMapper](#auto_mapper)
+    * [Autofac](#autofac)
 * [Design Pattern](#design_pattern)
     * [Fluent](#fluent)
     * [Dependency Injection](#dependency_injection)
@@ -1239,6 +1240,165 @@ namespace AutoMapperDemo
 ```
 
 With the above changes in place, now run the application, and you should see the output as expected.
+
+
+<a id="autofac"></a>
+## Autofac
+
+Certainly! Let's break it down into simpler terms:
+
+1. **What Is Autofac?**
+   - Imagine you're building a house. You need different materials like bricks, wood, and nails. Autofac is like a magical toolbox that helps you manage these materials (dependencies) in your software.
+   - It keeps track of what you need and provides it when you ask. So, instead of manually fetching each brick or nail, Autofac does it for you.
+
+2. **Why Use Autofac?**
+   - **Dependency Injection**: Autofac helps you inject (provide) the right materials (dependencies) into your classes automatically.
+   - **Modularity**: It encourages breaking your code into smaller pieces (modules) that fit together neatly.
+   - **Testing**: With Autofac, you can easily swap real materials with fake ones during testing.
+
+3. **Examples**:
+   - **Without Autofac (Manual Way)**:
+     - Imagine you're building a `UserService` that needs an `ILogger` (a tool to log messages).
+     - Manually, you'd create an `ILogger` and give it to `UserService`.
+   - **With Autofac**:
+     - You tell Autofac, "Hey, I need an `ILogger`!" It magically provides one.
+     - Your `UserService` doesn't worry about how to get an `ILogger`.
+     - Autofac handles it behind the scenes.
+
+4. **Benefits**:
+   - **Cleaner Code**: Autofac simplifies your code. You focus on building, not fetching materials.
+   - **Flexibility**: Swap materials easily (change implementations) without breaking things.
+   - **Less Boilerplate**: No more manual dependency management.
+
+Remember, Autofac is like your software's helpful toolbox. It ensures everything fits together smoothly! 🛠️
+
+Certainly! Let's explore both the **manual way** (without Autofac) and the **Autofac way** (using Autofac) for managing dependencies in C# applications.
+
+### **Manual Dependency Management (Without Autofac)**
+
+In this approach, you manually create instances of your dependencies and manage them yourself. Let's consider an example where we have an `EmployeeService` that depends on an `ILogger`:
+
+```csharp
+using System;
+
+public interface ILogger
+{
+    void Log(string message);
+}
+
+public class ConsoleLogger : ILogger
+{
+    public void Log(string message)
+    {
+        Console.WriteLine(message);
+    }
+}
+
+public class EmployeeService
+{
+    private readonly ILogger _logger;
+
+    public EmployeeService(ILogger logger)
+    {
+        _logger = logger;
+    }
+
+    public void PrintEmployeeDetails(string employeeName)
+    {
+        _logger.Log($"Employee details: {employeeName}");
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        var logger = new ConsoleLogger(); // Manually create an instance of ILogger
+        var employeeService = new EmployeeService(logger); // Manually inject the ILogger dependency
+
+        var employee = new Employee
+        {
+            EmployeeId = 1,
+            FirstName = "Peter",
+            LastName = "Parker",
+            Designation = "Photographer"
+        };
+
+        employeeService.PrintEmployeeDetails($"{employee.FirstName} {employee.LastName}");
+    }
+}
+```
+
+### **Autofac (Dependency Injection Made Easy)**
+
+Now let's see how we can achieve the same using Autofac:
+
+1. **Install Autofac via NuGet**:
+   - Add the Autofac NuGet package to your project.
+
+2. **Register Dependencies with Autofac**:
+   - Use the `ContainerBuilder` to register your dependencies.
+   - Autofac will automatically resolve dependencies when needed.
+
+```csharp
+using System;
+using Autofac;
+
+public interface ILogger
+{
+    void Log(string message);
+}
+
+public class ConsoleLogger : ILogger
+{
+    public void Log(string message)
+    {
+        Console.WriteLine(message);
+    }
+}
+
+public class EmployeeService
+{
+    private readonly ILogger _logger;
+
+    public EmployeeService(ILogger logger)
+    {
+        _logger = logger;
+    }
+
+    public void PrintEmployeeDetails(string employeeName)
+    {
+        _logger.Log($"Employee details: {employeeName}");
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        var builder = new ContainerBuilder();
+        builder.RegisterType<ConsoleLogger>().As<ILogger>(); // Register ILogger
+        builder.RegisterType<EmployeeService>(); // Register EmployeeService
+
+        var container = builder.Build();
+        var employeeService = container.Resolve<EmployeeService>(); // Autofac resolves dependencies
+
+        var employee = new Employee
+        {
+            EmployeeId = 1,
+            FirstName = "Peter",
+            LastName = "Parker",
+            Designation = "Photographer"
+        };
+
+        employeeService.PrintEmployeeDetails($"{employee.FirstName} {employee.LastName}");
+    }
+}
+```
+
+With Autofac, you don't need to manually create instances or worry about injecting dependencies. It handles everything behind the scenes, making your code cleaner and more maintainable! 🚀
+
+For more examples and detailed documentation, check out the [official Autofac documentation](https://docs.autofac.org/en/latest/).⁷⁴
 
 
 <a id="design_pattern"></a>
