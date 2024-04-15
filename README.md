@@ -1776,6 +1776,20 @@ for run dotnet project with hotreload
 dotnet watch
 ```
 
+in ef prop must be public
+```
+public class AppUser
+{
+    // UserName is public
+    public string UserName {  get; set; }
+}
+```
+
+optional prop
+```
+public string? Name {  get; set; }
+```
+
 
 ## appsettings.json
 What is the ASP.NET Core AppSettings.json File?
