@@ -1790,6 +1790,47 @@ optional prop
 public string? Name {  get; set; }
 ```
 
+## JsonStringEnumConverter
+In **ASP.NET Core**, the `[JsonConverter(typeof(JsonStringEnumConverter))]` attribute is used to customize how enumeration values are serialized and deserialized when working with JSON data. Let's break it down:
+
+1. **JsonStringEnumConverter**:
+   - The `JsonStringEnumConverter` is a built-in converter provided by **System.Text.Json** (not to be confused with Newtonsoft.Json). It allows you to control how enum values are represented in JSON.
+   - When applied to an enum property, it ensures that the enum values are serialized as strings (their names) instead of integers (their underlying numeric values).
+
+2. **Usage**:
+   - You can apply the `[JsonConverter(typeof(JsonStringEnumConverter))]` attribute to an enum property within your model or DTO (Data Transfer Object).
+   - For example:
+     ```csharp
+     public class Movie
+     {
+         public int Id { get; set; }
+         public string Title { get; set; }
+
+         [JsonConverter(typeof(JsonStringEnumConverter))]
+         public MovieState State { get; set; }
+     }
+     ```
+   - In this example, the `State` property of the `Movie` class will be serialized as a string (e.g., "Released") rather than an integer (e.g., 2).
+
+3. **Configuration**:
+   - To globally configure this behavior for all enum properties in your ASP.NET Core application, you can do the following:
+     - In your `Startup.cs` (or equivalent configuration file), add the following code:
+       ```csharp
+       services.AddControllers()
+           .AddJsonOptions(options =>
+           {
+               options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+           });
+       ```
+     - This ensures that all enum properties are serialized as strings by default.
+
+4. **Case Sensitivity**:
+   - Reading enum values from JSON is case-insensitive. For example, if the JSON contains `"state": "Released"`, it will correctly map to the `MovieState.Released` enum value.
+   - Writing (serialization) can be customized further using a `JsonNamingPolicy`.
+
+5. **Note**:
+   - If you're using **Newtonsoft.Json** (the older JSON library), you can achieve similar behavior by using `[JsonConverter(typeof(StringEnumConverter))]`. However, in ASP.NET Core 3.0 and later, it's recommended to use the built-in `JsonStringEnumConverter` from **System.Text.Json**.
+
 
 ## appsettings.json
 What is the ASP.NET Core AppSettings.json File?
