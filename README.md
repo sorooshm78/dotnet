@@ -1790,6 +1790,86 @@ optional prop
 public string? Name {  get; set; }
 ```
 
+for run https with certificate 
+```
+dotnet dev-certs https --trust
+```
+
+## implicit usings 
+**implicit usings** with a straightforward example. Imagine you're writing a simple C# program. Traditionally, you'd need to include `using` statements for various namespaces to access different features. But with implicit usings, life gets easier!
+
+1. **What Are Implicit Usings?**
+   - Implicit usings automatically include common namespaces in your C# code files without explicitly specifying `using` directives.
+   - These default namespaces are relevant to the project type (e.g., console, web, class library).
+
+2. **How to Enable Implicit Usings:**
+   - In your `.csproj` file, add this line to enable implicit usings:
+     ```xml
+     <ImplicitUsings>enable</ImplicitUsings>
+     ```
+   - This tells the compiler to implicitly include specified namespaces.
+
+3. **Example: Basic Threading Code**
+   Consider this simple threading code:
+   ```csharp
+   using System;
+   using System.Collections.Generic;
+   using System.Threading.Tasks;
+
+   Console.WriteLine("Hello World");
+   await Task.Delay(1000);
+   List<int> _ = new List<int>();
+   ```
+   With implicit usings, you don't need those `using` statements. The namespaces are implicitly included, making your code cleaner and more efficient.
+
+4. **Advanced Usage:**
+   - The SDK generates a `.cs` file called `ImplicitNamespaceImports.cs` in your `obj` folder.
+   - You can manually add or remove namespaces there for fine-grained control.
+
+5. **Benefits:**
+   - Faster development: Common namespaces are readily available.
+   - Cleaner code: Less boilerplate.
+   - Advanced control: Customize namespaces if needed.
+
+Remember, implicit usings make your life easier by reducing repetitive code and letting you focus on what matters most: building awesome software! 
+
+
+## nullable reference types 
+**nullable reference types** in a simple way and illustrate it with an example. In C#, nullable reference types help you avoid null reference exceptions by providing better type safety. Here's how it works:
+
+1. **What Are Nullable Reference Types?**
+   - Nullable reference types allow you to express whether a reference type (like a string or a custom class) can be null or not.
+   - They help catch potential null reference errors during compilation.
+
+2. **How to Enable Nullable Reference Types:**
+   - You can enable nullable reference types at the project level or in individual source files.
+   - To enable them for the entire project, add this line to your `.csproj` file:
+     ```xml
+     <Nullable>enable</Nullable>
+     ```
+   - This tells the compiler to meticulously check for nullability in your code.
+
+3. **Example: Non-Nullable String and Nullable String**
+   Let's say we have two strings:
+   ```csharp
+   string notNull = "Hello"; // Non-nullable
+   string? nullable = default; // Nullable
+   notNull = nullable!; // Using null forgiveness
+   ```
+   - `notNull` is non-nullable and must always have a value.
+   - `nullable` can be null, but we use the null-forgiving operator (`nullable!`) to assign it to `notNull`.
+
+4. **Where You Can't Use Nullable Reference Types:**
+   - A nullable reference type can't be used as a base class or implemented interface.
+   - It can't be used in object creation or type testing expressions.
+   - It can't be the type of a member access expression.
+
+5. **Advanced Usage:**
+   - The compiler uses annotations on existing reference types to find potential null reference errors.
+   - You'll see warnings if you forget to handle nullability.
+
+Remember, nullable reference types make your code safer by catching null-related issues early! 
+
 ## JsonStringEnumConverter
 In **ASP.NET Core**, the `[JsonConverter(typeof(JsonStringEnumConverter))]` attribute is used to customize how enumeration values are serialized and deserialized when working with JSON data. Let's break it down:
 
